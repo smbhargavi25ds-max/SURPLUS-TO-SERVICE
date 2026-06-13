@@ -1,34 +1,94 @@
 {% extends "base.html" %}
 
-{% block title %}User Dashboard - Surplus to Service{% endblock %}
+{% block title %}User Control Panel - Surplus to Service{% endblock %}
 
 {% block content %}
 <style>
-    /* Layout Entry Motion Wave */
-    @keyframes dashboardFade {
-        from {
-            opacity: 0;
-            transform: scale(0.99) translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-    }
-
-    /* Split Dashboard Grid Layout */
-    .dashboard-layout {
+    .dashboard-grid {
         display: grid;
-        grid-template-columns: 320px 1fr;
+        grid-template-columns: 1fr 2fr;
         gap: 32px;
-        align-items: start;
-        animation: dashboardFade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-
-    /* Left Sidebar Profile Card - Off-White Surface */
-    .profile-card {
+    .profile-card, .data-card {
         background: #ffffff;
-        border: 1px solid #eeebe3; /* Beige split */
-        border-radius: 24px;
-        padding: 32px 24px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0,
+        border: 1px solid #eeebe3;
+        border-radius: 20px;
+        padding: 24px;
+    }
+    .metric-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    .metric-box {
+        background: #fbf9f4;
+        padding: 16px;
+        border-radius: 12px;
+        text-align: center;
+    }
+    .metric-box h3 { margin: 0; color: #3b7a57; font-size: 24px; }
+    .metric-box p { margin: 4px 0 0 0; font-size: 12px; color: #6b705c; text-transform: uppercase; }
+    .record-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+    }
+    .record-table th, .record-table td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #eeebe3;
+        font-size: 14px;
+    }
+    .record-table th { color: #6b705c; font-weight: 600; }
+    .badge {
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    .badge-completed { background: rgba(59, 122, 87, 0.1); color: #3b7a57; }
+</style>
+
+<div class="dashboard-grid">
+    <div class="profile-card">
+        <h2 style="margin-top:0; font-size: 20px;">Node Profile</h2>
+        <hr style="border: 0; border-top: 1px solid #eeebe3; margin: 16px 0;">
+        <p><strong>Operator:</strong> {{ user[1] }}</p>
+        <p><strong>Contact:</strong> {{ user[2] }}</p>
+        <p><strong>Role Matrix:</strong> <span class="badge badge-completed">{{ user[3] }}</span></p>
+        <p><strong>Assigned Hub:</strong> {{ user[4] }}</p>
+    </div>
+
+    <div>
+        <div class="metric-row">
+            <div class="metric-box"><h3>{{ total }}</h3><p>Exchanges</p></div>
+            <div class="metric-box"><h3>{{ saved }} kg</h3><p>Food Diverted</p></div>
+            <div class="metric-box"><h3>{{ co2 }} kg</h3><p>CO₂ Saved</p></div>
+        </div>
+
+        <div class="data-card">
+            <h2 style="margin-top:0; font-size: 18px;">Allocation Ledger Records</h2>
+            <table class="record-table">
+                <thead>
+                    <tr>
+                        <th>Resource Description</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ex in exchanges %}
+                    <tr>
+                        <td><strong>{{ ex[6] }}</strong></td>
+                        <td>{{ ex[7] }}</td>
+                        <td><span class="badge badge-completed">{{ ex[5] }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

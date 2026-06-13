@@ -1,95 +1,39 @@
-{% extends 'base.html' %}
-{% block title %}— {{ listing[3] }}{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Batch Details - Surplus to Service{% endblock %}
+
 {% block content %}
+<style>
+    .detail-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        border: 1px solid #eeebe3;
+        border-radius: 24px;
+        padding: 32px;
+    }
+    .action-btn {
+        display: block;
+        text-align: center;
+        background: #3b7a57;
+        color: white;
+        padding: 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 24px;
+    }
+</style>
 
-<nav aria-label="breadcrumb" class="mb-3">
-  <ol class="breadcrumb small">
-    <li class="breadcrumb-item"><a href="{{ url_for('browse') }}" class="text-success">Browse</a></li>
-    <li class="breadcrumb-item active">{{ listing[3][:40] }}…</li>
-  </ol>
-</nav>
+<div class="detail-container">
+    <span style="text-transform: uppercase; font-size: 11px; font-weight:700; color:#3b7a57;">{{ listing[2] }}</span>
+    <h1 style="margin: 8px 0 16px 0; font-size: 28px;">{{ listing[3] }}</h1>
+    
+    <p><strong>Available Weight Volume:</strong> {{ listing[4] }} KG</p>
+    <p><strong>Hub Terminal Node Location:</strong> {{ listing[8] }} ({{ listing[9] }})</p>
+    <p><strong>Logistics Handling Notes:</strong> {{ listing[6] }}</p>
+    <p><strong>Fulfillment Contact Link:</strong> {{ listing[10] }}</p>
 
-<div class="row g-4">
-  <div class="col-md-7">
-    <div class="card border shadow-sm">
-      <div class="card-body p-4">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <span class="badge-category badge-{{ listing[2] }} fs-6">{{ listing[2].capitalize() }}</span>
-          <span class="text-warning small fw-medium">
-            <i class="bi bi-clock me-1"></i>
-            Expires {{ listing[5].strftime('%d %b, %I:%M %p') if listing[5] else 'N/A' }}
-          </span>
-        </div>
-        <h4 class="fw-semibold mb-1">{{ listing[3] }}</h4>
-        <p class="text-muted mb-3">Posted by <strong>{{ listing[10] }}</strong> · {{ listing[11] }}</p>
-
-        <hr/>
-        <div class="row g-3 text-center">
-          <div class="col-4">
-            <div class="p-2 bg-light rounded">
-              <div class="fw-semibold">{{ listing[4] }} kg</div>
-              <div class="text-muted small">Quantity</div>
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="p-2 bg-light rounded">
-              <div class="fw-semibold">{{ listing[6].replace('_',' ').title() }}</div>
-              <div class="text-muted small">Pickup</div>
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="p-2 bg-light rounded">
-              <div class="fw-semibold text-success">Available</div>
-              <div class="text-muted small">Status</div>
-            </div>
-          </div>
-        </div>
-
-        <hr/>
-        <h6 class="fw-semibold">Donor contact</h6>
-        <p class="mb-1"><i class="bi bi-person me-2 text-muted"></i>{{ listing[10] }}</p>
-        <p class="mb-0"><i class="bi bi-envelope me-2 text-muted"></i>{{ listing[12] }}</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-5">
-    {% if listing[1] == session.user_id %}
-    <div class="alert alert-info">This is your own listing.</div>
-    {% elif listing[7] != 'available' %}
-    <div class="alert alert-secondary">This listing has already been claimed.</div>
-    {% else %}
-    <div class="card border shadow-sm">
-      <div class="card-body p-4">
-        <h5 class="fw-semibold mb-3">Claim this listing</h5>
-        <form method="POST" action="{{ url_for('claim', listing_id=listing[0]) }}">
-          <div class="mb-3">
-            <label class="form-label small fw-medium">Your role</label>
-            <select name="role" class="form-select">
-              <option>NGO / Community kitchen</option>
-              <option>Restaurant</option>
-              <option>Community garden</option>
-              <option>Individual</option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <label class="form-label small fw-medium">Preferred pickup time</label>
-            <select name="pickup_time" class="form-select">
-              <option>As soon as possible</option>
-              <option>Within 1–2 hours</option>
-              <option>This afternoon</option>
-              <option>This evening</option>
-              <option>Tomorrow morning</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-success w-100">
-            <i class="bi bi-check-circle me-1"></i> Confirm claim
-          </button>
-        </form>
-      </div>
-    </div>
-    {% endif %}
-  </div>
+    <a href="{{ url_for('browse') }}" class="action-btn">Return to Logistics Pipeline</a>
 </div>
-
 {% endblock %}
