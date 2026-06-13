@@ -16,7 +16,7 @@
         }
     }
 
-    /* Welcome Hero Banner Banner Frame */
+    /* Welcome Hero Banner Frame */
     .hero-section {
         background: linear-gradient(135deg, #3b7a57 0%, #2d5e43 100%); /* Organic Leaf Green Gradient */
         border-radius: 24px;
@@ -172,6 +172,7 @@
     }
 </style>
 
+<!-- Welcome Hero Banner -->
 <section class="hero-section">
     <h1>Welcome back to the Network</h1>
     <p>Monitor active hub allocations, route excess logistics, and reduce localized distribution footprints in real time.</p>
@@ -180,9 +181,54 @@
     </a>
 </section>
 
+<!-- System Portals Main Matrix Actions Grid -->
 <h2 class="section-title">System Portals</h2>
 <div class="action-grid">
     
     <div class="action-card">
         <div class="icon-wrapper">
-            <i class="fa-solid fa-server">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <h3>Browse Resources</h3>
+        <p>Explore current real-time community resource listings and request active connections.</p>
+        <a href="{{ url_for('browse') }}" class="action-link">View Marketplace &rarr;</a>
+    </div>
+
+    <div class="action-card">
+        <div class="icon-wrapper">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <h3>Post Excess Log</h3>
+        <p>Log available resource batches to make them instantly discoverable by nearby nodes.</p>
+        <a href="{{ url_for('post') }}" class="action-link">Create Record &rarr;</a>
+    </div>
+
+    <div class="action-card">
+        <div class="icon-wrapper">
+            <i class="fa-solid fa-chart-pie"></i>
+        </div>
+        <h3>Activity Monitor</h3>
+        <p>Track your verified metrics, carbon mitigation impact scores, and transaction history.</p>
+        <a href="{{ url_for('dashboard') }}" class="action-link">Open Dashboard &rarr;</a>
+    </div>
+
+</div>
+
+<!-- Global Impact Metric Aggregations Block Container -->
+<h2 class="section-title">Global Impact Metric Aggregations</h2>
+<div class="impact-showcase">
+    <div class="impact-stat">
+        <h4>1,420 KG</h4>
+        <p>Aggregated Surplus Diverted</p>
+    </div>
+    <div class="impact-stat">
+        <h4>3,550 kg</h4>
+        <p>Total CO<sub>2</sub> Mitigation</p>
+    </div>
+    <div class="impact-stat">
+        <h4>412</h4>
+        <p>Active Verified Nodes</p>
+    </div>
+</div>
+
+{% endblock %}
