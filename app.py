@@ -9,14 +9,28 @@ import os
 app = Flask(__name__)
 app.secret_key = 'surplus_to_service_secret_key_change_in_production'
 
-# MySQL config — update with your credentials
+# MySQL config - update with your credentials
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'Smbsmb@2007'
 app.config['MYSQL_DB'] = 'surplus_service'
 
-mysql = MySQL(app)
+# This fake wrapper mimics flask_mysqldb so you don't have to change your routes!
+class PyMySQLWrapper:
+    def __init__(self, app):
+        self.app = app
+    @property
+    def connection(self):
+        return pymysql.connect(
+            host=self.app.config['MYSQL_HOST'],
+            user=self.app.config['MYSQL_USER'],
+            password=self.app.config['MYSQL_PASSWORD'],
+            database=self.app.config['MYSQL_DB'],
+            autocommit=True
+        )
 
+# This defines 'mysql' perfectly, clearing the NameError line!
+mysql = PyMySQLWrapper(app)
 # ─── AUTH ───────────────────────────────────────────────
 
 @app.route('/')
