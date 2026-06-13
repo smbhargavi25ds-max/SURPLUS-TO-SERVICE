@@ -1,47 +1,69 @@
 {% extends "base.html" %}
 
-{% block title %}Sign In - Surplus to Service{% endblock %}
+{% block title %}Sign In — Surplus to Service{% endblock %}
 
 {% block content %}
-<div style="max-width: 420px; margin: 60px auto; padding: 32px; background: #ffffff; border: 1px solid #eeebe3; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.02); font-family: system-ui, -apple-system, sans-serif;">
-    
-    <div style="text-align: center; margin-bottom: 28px;">
-        <h2 style="color: #2c3531; margin: 0 0 8px 0; font-size: 24px; font-weight: 700;">Welcome Back</h2>
-        <p style="color: #6b705c; margin: 0; font-size: 14px;">Access the surplus distribution asset portal</p>
+<div style="display: flex; justify-content: center; align-items: flex-start; padding: 48px 16px; min-height: 100vh; background: #f7f6f2;">
+  <div style="width: 100%; max-width: 400px; background: #ffffff; border: 1px solid #eae8e1; border-radius: 20px; padding: 32px; font-family: system-ui, -apple-system, sans-serif;">
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
+      <div style="width: 32px; height: 32px; background: #3b7a57; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+        <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+        </svg>
+      </div>
+      <span style="font-size: 13px; font-weight: 500; color: #6b705c; letter-spacing: 0.02em;">Surplus to Service</span>
     </div>
+
+    <h2 style="font-size: 20px; font-weight: 600; color: #2c3531; margin: 0 0 4px;">Welcome back</h2>
+    <p style="font-size: 13px; color: #6b705c; margin: 0 0 24px;">Sign in to the asset distribution portal</p>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div style="padding: 12px; margin-bottom: 16px; border-radius: 8px; font-size: 14px; font-weight: 500; text-align: center; 
-                    {% if category == 'success' %} background: rgba(59, 122, 87, 0.1); color: #3b7a57; {% else %} background: #fdf2f2; color: #de4437; {% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'success' %}
+            <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; margin-bottom: 20px; border-radius: 10px; font-size: 13px; background: #edf7f1; color: #2e6e47; border: 1px solid #b8ddc9;">
+              ✓ {{ message }}
+            </div>
+          {% else %}
+            <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; margin-bottom: 20px; border-radius: 10px; font-size: 13px; background: #fdf2f2; color: #b33030; border: 1px solid #f5c0c0;">
+              ! {{ message }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
     {% endwith %}
 
-    <form action="{{ url_for('login') }}" method="POST">
-        <div style="margin-bottom: 18px;">
-            <label style="display: block; font-size: 13px; font-weight: 600; color: #2c3531; margin-bottom: 6px;">Email Address / Username</label>
-            <input type="text" name="username" placeholder="enter test email or username" required 
-                   style="width: 100%; padding: 12px; border: 1px solid #eeebe3; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none; transition: border 0.2s;">
-        </div>
+    <form action="{{ url_for('login') }}" method="POST" novalidate>
 
-        <div style="margin-bottom: 24px;">
-            <label style="display: block; font-size: 13px; font-weight: 600; color: #2c3531; margin-bottom: 6px;">Password</label>
-            <input type="password" name="password" placeholder="••••••••" required 
-                   style="width: 100%; padding: 12px; border: 1px solid #eeebe3; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none;">
-        </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 12px; font-weight: 600; color: #6b705c; margin-bottom: 6px; letter-spacing: 0.03em; text-transform: uppercase;">Email or username</label>
+        <input type="text" name="username" placeholder="name@organisation.org" required autocomplete="username"
+          style="width: 100%; padding: 10px 14px; border: 1px solid #dddbd4; border-radius: 10px; font-size: 14px; color: #2c3531; background: #fff; box-sizing: border-box; outline: none;"
+          onfocus="this.style.borderColor='#3b7a57'" onblur="this.style.borderColor='#dddbd4'">
+      </div>
 
-        <button type="submit" style="width: 100%; background: #3b7a57; color: #ffffff; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s;">
-            Sign In to System
-        </button>
+      <div style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+          <label style="font-size: 12px; font-weight: 600; color: #6b705c; letter-spacing: 0.03em; text-transform: uppercase;">Password</label>
+          <a href="/forgot-password" style="font-size: 12px; color: #3b7a57; text-decoration: none; font-weight: 500;">Forgot password?</a>
+        </div>
+        <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password"
+          style="width: 100%; padding: 10px 14px; border: 1px solid #dddbd4; border-radius: 10px; font-size: 14px; color: #2c3531; background: #fff; box-sizing: border-box; outline: none;"
+          onfocus="this.style.borderColor='#3b7a57'" onblur="this.style.borderColor='#dddbd4'">
+      </div>
+
+      <button type="submit"
+        style="width: 100%; padding: 11px; background: #3b7a57; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; letter-spacing: 0.01em;">
+        Sign in
+      </button>
+
     </form>
 
-    <div style="text-align: center; margin-top: 24px; border-top: 1px solid #fbf9f4; padding-top: 16px; font-size: 13px; color: #6b705c;">
-        Don't have an asset node profile? <a href="{{ url_for('register') }}" style="color: #3b7a57; font-weight: 600; text-decoration: none;">Register profile</a>
-    </div>
+    <p style="text-align: center; margin: 20px 0 0; font-size: 13px; color: #6b705c;">
+      No account? <a href="/browse" style="color: #3b7a57; font-weight: 600; text-decoration: none;">Explore the marketplace</a>
+    </p>
 
+  </div>
 </div>
 {% endblock %}
