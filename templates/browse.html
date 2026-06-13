@@ -11,13 +11,13 @@
 
     .page-header h2 {
         font-size: 28px;
-        color: #0f172a;
+        color: #292524; /* Dark espresso */
         font-weight: 700;
         margin-bottom: 8px;
     }
 
     .page-header p {
-        color: #64748b;
+        color: #78716c; /* Soft stone dark */
         font-size: 15px;
     }
 
@@ -29,7 +29,6 @@
         margin-bottom: 40px;
         overflow-x: auto;
         padding-bottom: 8px;
-        /* Hide scrollbar for clean visual appearance */
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
@@ -43,9 +42,9 @@
         gap: 8px;
         padding: 10px 20px;
         background: white;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #e7e5e4;
         border-radius: 100px;
-        color: #475569;
+        color: #57534e;
         text-decoration: none;
         font-size: 14px;
         font-weight: 600;
@@ -55,18 +54,18 @@
     }
 
     .filter-pill:hover {
-        border-color: #047857;
-        color: #047857;
-        background: rgba(4, 120, 87, 0.02);
+        border-color: #ea580c; /* Terracotta hover */
+        color: #ea580c;
+        background: rgba(234, 88, 12, 0.02);
         transform: translateY(-1px);
     }
 
-    /* Active category pill highlight */
+    /* Active category pill highlight - Amber/Terracotta theme */
     .filter-pill.active {
-        background: #047857;
-        border-color: #047857;
+        background: #ea580c;
+        border-color: #ea580c;
         color: white;
-        box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2);
+        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
     }
 
     /* Inventory Visual Card Grid */
@@ -79,7 +78,7 @@
     .browse-card {
         background: white;
         border-radius: 20px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #e7e5e4;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         display: flex;
         flex-direction: column;
@@ -89,7 +88,7 @@
 
     .browse-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 20px 25px -5px rgba(234, 88, 12, 0.08);
     }
 
     .card-main {
@@ -110,28 +109,28 @@
         font-size: 12px;
         font-weight: 600;
         text-transform: uppercase;
-        background: #ecfdf5;
-        color: #059669;
+        background: #fef3c7; /* Warm Amber Tint */
+        color: #d97706; /* Dark Amber */
     }
 
     .qty-tag {
         font-size: 13px;
         font-weight: 700;
-        color: #047857;
-        background: rgba(4, 120, 87, 0.08);
+        color: #ea580c;
+        background: rgba(234, 88, 12, 0.08);
         padding: 4px 10px;
         border-radius: 6px;
     }
 
     .browse-card h3 {
         font-size: 18px;
-        color: #0f172a;
+        color: #292524;
         font-weight: 700;
         margin-bottom: 8px;
     }
 
     .browse-card p {
-        color: #475569;
+        color: #57534e;
         font-size: 14px;
         line-height: 1.5;
         margin-bottom: 20px;
@@ -141,7 +140,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        color: #64748b;
+        color: #78716c;
         font-size: 13px;
         margin-bottom: 10px;
     }
@@ -149,19 +148,19 @@
     .info-line i {
         width: 16px;
         text-align: center;
-        color: #94a3b8;
+        color: #a8a29e;
     }
 
     .card-action-bar {
         padding: 20px 24px;
-        background: #f8fafc;
-        border-top: 1px solid #e2e8f0;
+        background: #faf8f5;
+        border-top: 1px solid #e7e5e4;
     }
 
     .btn-connect {
         display: block;
         text-align: center;
-        background: #047857;
+        background: #ea580c; /* Terracotta */
         color: white;
         padding: 12px;
         border-radius: 12px;
@@ -169,12 +168,12 @@
         font-weight: 600;
         font-size: 14px;
         transition: all 0.2s ease;
-        box-shadow: 0 4px 12px rgba(4, 120, 87, 0.1);
+        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.1);
     }
 
     .btn-connect:hover {
-        background: #065f46;
-        box-shadow: 0 6px 16px rgba(4, 120, 87, 0.25);
+        background: #c2410c;
+        box-shadow: 0 6px 16px rgba(234, 88, 12, 0.25);
         transform: translateY(-1px);
     }
 </style>
@@ -184,6 +183,7 @@
     <p>Filter active inventory items by category and secure active nodes system-wide.</p>
 </div>
 
+<!-- Dynamic Filter Pills -->
 <div class="category-filter-container">
     <a href="{{ url_for('browse', category='all') }}" class="filter-pill {% if category == 'all' %}active{% endif %}">
         <i class="fa-solid fa-border-all"></i> All Categories
@@ -202,6 +202,7 @@
     </a>
 </div>
 
+<!-- Results Card Grid -->
 <div class="browse-grid">
     {% for item in listings %}
     <div class="browse-card">
@@ -232,8 +233,8 @@
         </div>
     </div>
     {% else %}
-    <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #64748b; background: white; border-radius: 20px; border: 1px solid #e2e8f0;">
-        <i class="fa-solid fa-magnifying-glass" style="font-size: 48px; margin-bottom: 16px; color: #cbd5e1;"></i>
+    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #78716c; background: white; border-radius: 20px; border: 1px solid #e7e5e4;">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 48px; margin-bottom: 16px; color: #d6d3d1;"></i>
         <p>No listings found matching the select parameters.</p>
     </div>
     {% endfor %}
