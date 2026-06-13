@@ -1,31 +1,160 @@
-{% extends 'base.html' %}
-{% block title %}— Login{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Sign In - Surplus to Service{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center mt-5">
-  <div class="col-md-4">
-    <div class="text-center mb-4">
-      <span class="brand-icon-lg"><i class="bi bi-arrow-repeat"></i></span>
-      <h4 class="fw-semibold mt-2">SURPLUS TO SERVICE</h4>
-      <p class="text-muted small">Log in to your account</p>
-    </div>
-    <div class="card border-0 shadow-sm">
-      <div class="card-body p-4">
-        <form method="POST">
-          <div class="mb-3">
-            <label class="form-label small fw-medium">Email address</label>
-            <input type="email" name="email" class="form-control" placeholder="you@example.com" required/>
-          </div>
-          <div class="mb-4">
-            <label class="form-label small fw-medium">Password</label>
-            <input type="password" name="password" class="form-control" placeholder="••••••••" required/>
-          </div>
-          <button type="submit" class="btn btn-success w-100">Log in</button>
+<style>
+    /* Keyframe for smooth entry fade-in animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Full-viewport Centering Wrapper */
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        width: 100%;
+    }
+
+    /* Centered Login Card with Catchy Slide-up Entry */
+    .login-card {
+        background: white;
+        border: 2px solid #e7e5e4; /* Thicker, defined border */
+        border-radius: 24px;
+        padding: 40px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 10px 30px rgba(234, 88, 12, 0.05);
+        text-align: center;
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; /* Premium physics animation curve */
+    }
+
+    .login-card h2 {
+        font-size: 26px;
+        color: #292524;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .login-card p {
+        color: #78716c;
+        font-size: 14px;
+        margin-bottom: 32px;
+    }
+
+    /* Form Fields Alignment */
+    .form-group {
+        margin-bottom: 24px;
+        text-align: left;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: #57534e;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+
+    /* Catchy Form Control with Custom Transitions & Glowing Highlights */
+    .form-control {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #e7e5e4;
+        border-radius: 14px;
+        font-size: 15px;
+        color: #292524;
+        background-color: #faf8f5;
+        transition: all 0.25s ease-in-out;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #ea580c;
+        background-color: white;
+        box-shadow: 0 0 0 5px rgba(234, 88, 12, 0.15); /* Soft, glowing golden-orange halo */
+        transform: translateY(-1px); /* Slight interactive lifting movement */
+    }
+
+    /* Premium Accent Button with Dynamic Gradients and Shine physics */
+    .btn-login {
+        width: 100%;
+        background: linear-gradient(135deg, #ea580c 0%, #d97706 100%);
+        color: white;
+        border: none;
+        padding: 16px;
+        border-radius: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
+        margin-top: 12px;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-3px); /* Pop up forward slightly */
+        box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35); /* Deeper shadow depth on active cursor hover */
+        letter-spacing: 0.5px; /* Premium letter widening effect */
+    }
+
+    .btn-login:active {
+        transform: translateY(-1px); /* Tactile button press feedback */
+    }
+
+    /* Footer Navigation Links */
+    .login-footer {
+        margin-top: 28px;
+        font-size: 14px;
+        color: #78716c;
+    }
+
+    .login-footer a {
+        color: #ea580c;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+    }
+
+    .login-footer a:hover {
+        text-decoration: underline;
+        color: #c2410c;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <h2>Welcome Back</h2>
+        <p>Access your Node to coordinate logistics.</p>
+        
+        <form action="{{ url_for('login') }}" method="POST">
+            <div class="form-group">
+                <label for="username">Username / Email</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required autocomplete="username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+            
+            <button type="submit" class="btn-login">Sign In</button>
         </form>
-      </div>
+        
+        <div class="login-footer">
+            Don't have an account? <a href="{{ url_for('register') }}">Join Free</a>
+        </div>
     </div>
-    <p class="text-center text-muted small mt-3">
-      No account? <a href="{{ url_for('register') }}" class="text-success">Register here</a>
-    </p>
-  </div>
 </div>
 {% endblock %}
