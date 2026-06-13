@@ -6,286 +6,206 @@
 <style>
     /* Hero Welcome Section */
     .hero-section {
-        background: linear-gradient(135deg, #047857 0%, #065f46 100%);
-        color: white;
-        padding: 40px;
+        background: linear-gradient(135deg, #ea580c 0%, #d97706 100%); /* Terracotta to Amber Gradient */
         border-radius: 24px;
-        margin-bottom: 32px;
-        box-shadow: 0 10px 25px rgba(4, 120, 87, 0.15);
+        padding: 60px 40px;
+        color: white;
+        text-align: center;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.2);
     }
 
-    .hero-section h2 {
-        font-size: 32px;
+    .hero-section h1 {
+        font-size: 36px;
         font-weight: 700;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
+        letter-spacing: -0.5px;
     }
 
     .hero-section p {
-        font-size: 16px;
+        font-size: 18px;
         opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto 24px auto;
+        line-height: 1.6;
     }
 
-    /* Grid Layout for Impact Metrics Dashboard */
-    .metrics-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 24px;
-        margin-bottom: 48px;
-    }
-
-    .metric-card {
+    .hero-cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         background: white;
-        padding: 24px;
-        border-radius: 20px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        color: #ea580c;
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
-    .metric-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
+    .hero-cta-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        background: #fdfbf7;
     }
 
-    .metric-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-    }
-
-    /* Custom Icon Color Schemes */
-    .icon-blue { background: #eff6ff; color: #2563eb; }
-    .icon-green { background: #ecfdf5; color: #059669; }
-    .icon-purple { background: #faf5ff; color: #7c3aed; }
-    .icon-orange { background: #fff7ed; color: #ea580c; }
-
-    .metric-info h3 {
-        font-size: 14px;
-        color: #64748b;
-        font-weight: 500;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .metric-info .value {
-        font-size: 24px;
+    /* Quick Action Section */
+    .section-title {
+        font-size: 22px;
         font-weight: 700;
-        color: #0f172a;
-    }
-
-    /* Recent Items Section Header */
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        color: #292524;
         margin-bottom: 24px;
     }
 
-    .section-header h2 {
-        font-size: 22px;
-        color: #0f172a;
-        font-weight: 700;
-    }
-
-    .view-all-btn {
-        color: #047857;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 15px;
-        transition: color 0.2s ease;
-    }
-
-    .view-all-btn:hover {
-        color: #065f46;
-        text-decoration: underline;
-    }
-
-    /* Listings Visual Cards Grid */
-    .listings-grid {
+    .action-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 32px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
     }
 
-    .listing-card {
+    .action-card {
         background: white;
+        border: 1px solid #e7e5e4;
         border-radius: 20px;
-        border: 1px solid #e2e8f0;
-        overflow: hidden;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 32px 24px;
+        text-align: left;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+    }
+
+    .action-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px -3px rgba(234, 88, 12, 0.05);
+        border-color: #ea580c;
+    }
+
+    .icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(234, 88, 12, 0.1);
+        color: #ea580c;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 20px;
     }
 
-    .listing-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-body {
-        padding: 24px;
-        flex: 1;
-    }
-
-    .category-badge {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        background: #f1f5f9;
-        color: #475569;
-        margin-bottom: 16px;
-    }
-
-    .listing-card h3 {
+    .action-card h3 {
         font-size: 18px;
-        color: #0f172a;
-        margin-bottom: 8px;
+        color: #292524;
         font-weight: 700;
+        margin-bottom: 8px;
     }
 
-    .listing-desc {
-        color: #475569;
+    .action-card p {
+        color: #78716c;
         font-size: 14px;
         line-height: 1.5;
         margin-bottom: 20px;
     }
 
-    .meta-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: #64748b;
-        font-size: 13px;
-        margin-bottom: 10px;
-    }
-
-    .meta-row i {
-        width: 16px;
-        text-align: center;
-        color: #94a3b8;
-    }
-
-    .card-footer {
-        padding: 20px 24px;
-        background: #f8fafc;
-        border-top: 1px solid #e2e8f0;
-    }
-
     .action-link {
-        display: block;
-        text-align: center;
-        background: white;
-        border: 2px solid #047857;
-        color: #047857;
-        padding: 12px;
-        border-radius: 12px;
+        color: #ea580c;
         text-decoration: none;
         font-weight: 600;
         font-size: 14px;
-        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
     }
 
     .action-link:hover {
-        background: #047857;
-        color: white;
-        box-shadow: 0 4px 12px rgba(4, 120, 87, 0.15);
+        color: #c2410c;
+        text-decoration: underline;
+    }
+
+    /* Environmental Impact Counter Block */
+    .impact-showcase {
+        background: #faf8f5;
+        border: 1px solid #e7e5e4;
+        border-radius: 20px;
+        padding: 32px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px;
+        text-align: center;
+    }
+
+    .impact-stat h4 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #d97706; /* Amber Impact Number */
+        margin-bottom: 4px;
+    }
+
+    .impact-stat p {
+        font-size: 14px;
+        color: #57534e;
+        font-weight: 500;
     }
 </style>
 
-<div class="hero-section">
-    <h2>Hello, {{ session.get('user_name', 'User') }}!</h2>
-    <p>Track your resource metric distribution and discover available surplus allocations nearby.</p>
+<!-- Welcome Hero banner -->
+<section class="hero-section">
+    <h1>Welcome back to the Network</h1>
+    <p>Monitor your active hub allocations, route excess logistics, and reduce localized distribution footprints in real time.</p>
+    <a href="{{ url_for('browse') }}" class="hero-cta-btn">
+        Browse Current Surplus <i class="fa-solid fa-arrow-right"></i>
+    </a>
+</section>
+
+<!-- System Portals Actions -->
+<h2 class="section-title">System Portals</h2>
+<div class="action-grid">
+    
+    <div class="action-card">
+        <div class="icon-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <h3>Browse Resources</h3>
+        <p>Explore current real-time community resource listings and request active connections.</p>
+        <a href="{{ url_for('browse') }}" class="action-link">View Marketplace &rarr;</a>
+    </div>
+
+    <div class="action-card">
+        <div class="icon-wrapper">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <h3>Post Excess Log</h3>
+        <p>Log available resource batches to make them instantly discoverable by nearby nodes.</p>
+        <a href="{{ url_for('post') }}" class="action-link">Create Record &rarr;</a>
+    </div>
+
+    <div class="action-card">
+        <div class="icon-wrapper">
+            <i class="fa-solid fa-chart-pie"></i>
+        </div>
+        <h3>Activity Monitor</h3>
+        <p>Track your verified metrics, carbon mitigation impact scores, and transaction history.</p>
+        <a href="{{ url_for('dashboard') }}" class="action-link">Open Dashboard &rarr;</a>
+    </div>
+
 </div>
 
-<div class="metrics-grid">
-    <div class="metric-card">
-        <div class="metric-icon icon-blue">
-            <i class="fa-solid fa-arrows-rotate"></i>
-        </div>
-        <div class="metric-info">
-            <h3>Total Exchanges</h3>
-            <div class="value">{{ total_exchanges }}</div>
-        </div>
+<!-- Environmental Metrics Rollup -->
+<h2 class="section-title">Global Impact Metric Aggregations</h2>
+<div class="impact-showcase">
+    <div class="impact-stat">
+        <h4>1,420 KG</h4>
+        <p>Aggregated Surplus Diverted</p>
     </div>
-
-    <div class="metric-card">
-        <div class="metric-icon icon-green">
-            <i class="fa-solid fa-weight-scale"></i>
-        </div>
-        <div class="metric-info">
-            <h3>Food Saved (KG)</h3>
-            <div class="value">{{ food_saved }}</div>
-        </div>
+    <div class="impact-stat">
+        <h4>3,550 kg</h4>
+        <p>Total $\text{CO}_2$ Mitigation</p>
     </div>
-
-    <div class="metric-card">
-        <div class="metric-icon icon-purple">
-            <i class="fa-solid fa-cloud-arrow-down"></i>
-        </div>
-        <div class="metric-info">
-            <h3>CO₂ Prevented</h3>
-            <div class="value">{{ co2_saved }} kg</div>
-        </div>
+    <div class="impact-stat">
+        <h4>412</h4>
+        <p>Active Verified Nodes</p>
     </div>
-
-    <div class="metric-card">
-        <div class="metric-icon icon-orange">
-            <i class="fa-solid fa-circle-nodes"></i>
-        </div>
-        <div class="metric-info">
-            <h3>Active Nodes</h3>
-            <div class="value">{{ total_nodes }}</div>
-        </div>
-    </div>
-</div>
-
-<div class="section-header">
-    <h2>Recent Available Allocations</h2>
-    <a href="{{ url_for('browse') }}" class="view-all-btn">Browse All <i class="fa-solid fa-arrow-right"></i></a>
-</div>
-
-<div class="listings-grid">
-    {% for item in recent %}
-    <div class="listing-card">
-        <div class="card-body">
-            <span class="category-badge">{{ item[2] }}</span>
-            <h3>{{ item[3] }}</h3>
-            
-            <div class="meta-row">
-                <i class="fa-solid fa-scale-balanced"></i>
-                <span>Quantity: <strong>{{ item[4] }} KG</strong></span>
-            </div>
-            <div class="meta-row">
-                <i class="fa-solid fa-user"></i>
-                <span>Posted by: {{ item[8] }}</span>
-            </div>
-            <div class="meta-row">
-                <i class="fa-solid fa-location-dot"></i>
-                <span>Location: {{ item[9] }}</span>
-            </div>
-        </div>
-        <div class="card-footer">
-            <a href="{{ url_for('listing_detail', listing_id=item[0]) }}" class="action-link">View Connection Details</a>
-        </div>
-    </div>
-    {% else %}
-    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
-        <i class="fa-solid fa-box-open" style="font-size: 48px; margin-bottom: 16px; color: #cbd5e1;"></i>
-        <p>No active surplus items available right now.</p>
-    </div>
-    {% endfor %}
 </div>
 
 {% endblock %}
