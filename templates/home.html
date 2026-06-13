@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}— Home{% endblock %}
+{% block content %}
+
+<!-- Hero -->
+<div class="hero-banner rounded-3 p-4 p-md-5 mb-4">
+  <div class="row align-items-center">
+    <div class="col-md-7">
+      <p class="text-success small fw-medium mb-1 text-uppercase letter-spacing">Circular Resource Network</p>
+      <h1 class="display-6 fw-semibold mb-2">Nothing wasted,<br>everything shared.</h1>
+      <p class="text-muted mb-4">Connect surplus food and resources to those who need them nearby. Every exchange closes the loop.</p>
+      <div class="d-flex gap-2">
+        <a href="{{ url_for('browse') }}" class="btn btn-success px-4">
+          <i class="bi bi-grid me-1"></i> Browse listings
+        </a>
+        <a href="{{ url_for('post') }}" class="btn btn-outline-success px-4">
+          <i class="bi bi-plus-circle me-1"></i> Post surplus
+        </a>
+      </div>
+    </div>
+    <div class="col-md-5 mt-4 mt-md-0">
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="stat-card text-center p-3 rounded-3">
+            <div class="stat-number">{{ food_saved }}t</div>
+            <div class="stat-label">food saved</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="stat-card text-center p-3 rounded-3">
+            <div class="stat-number">{{ total_nodes }}</div>
+            <div class="stat-label">active nodes</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="stat-card text-center p-3 rounded-3">
+            <div class="stat-number">{{ total_exchanges }}</div>
+            <div class="stat-label">exchanges</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="stat-card text-center p-3 rounded-3">
+            <div class="stat-number">{{ co2_saved }}t</div>
+            <div class="stat-label">CO₂ offset</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent listings -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="fw-semibold mb-0">Recent activity near you</h5>
+  <a href="{{ url_for('browse') }}" class="btn btn-sm btn-outline-secondary">View all <i class="bi bi-arrow-right"></i></a>
+</div>
+
+{% if recent %}
+<div class="row g-3">
+  {% for l in recent %}
+  <div class="col-md-4">
+    <a href="{{ url_for('listing_detail', listing_id=l[0]) }}" class="text-decoration-none">
+      <div class="card listing-card h-100 border">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="badge-category badge-{{ l[2] }}">{{ l[2].capitalize() }}</span>
+            <small class="text-muted">{{ l[10] }}</small>
+          </div>
+          <h6 class="fw-semibold text-dark mb-1">{{ l[3] }}</h6>
+          <p class="small text-muted mb-0">{{ l[11] }} · {{ l[5].strftime('%d %b, %I:%M %p') if l[5] else '' }}</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center text-muted py-5">
+  <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+  No listings yet. <a href="{{ url_for('post') }}">Be the first to post surplus!</a>
+</div>
+{% endif %}
+
+<!-- How it works -->
+<div class="mt-5 mb-2">
+  <h5 class="fw-semibold mb-3">How it works</h5>
+  <div class="row g-3 text-center">
+    {% for icon, title, desc in [
+      ('bi-person-plus', 'Register', 'Join as a farmer, restaurant, NGO, or composter'),
+      ('bi-plus-square', 'Post surplus', 'List your leftover food or resources'),
+      ('bi-search', 'Get matched', 'Nearby recipients are notified automatically'),
+      ('bi-arrow-repeat', 'Close the loop', 'Exchange logged, impact tracked')
+    ] %}
+    <div class="col-6 col-md-3">
+      <div class="how-card p-3 rounded-3">
+        <i class="bi {{ icon }} fs-3 text-success d-block mb-2"></i>
+        <div class="fw-medium small">{{ title }}</div>
+        <div class="text-muted" style="font-size:12px;">{{ desc }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

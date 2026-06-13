@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}— Login{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-4">
+    <div class="text-center mb-4">
+      <span class="brand-icon-lg"><i class="bi bi-arrow-repeat"></i></span>
+      <h4 class="fw-semibold mt-2">SURPLUS TO SERVICE</h4>
+      <p class="text-muted small">Log in to your account</p>
+    </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label small fw-medium">Email address</label>
+            <input type="email" name="email" class="form-control" placeholder="you@example.com" required/>
+          </div>
+          <div class="mb-4">
+            <label class="form-label small fw-medium">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="••••••••" required/>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Log in</button>
+        </form>
+      </div>
+    </div>
+    <p class="text-center text-muted small mt-3">
+      No account? <a href="{{ url_for('register') }}" class="text-success">Register here</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

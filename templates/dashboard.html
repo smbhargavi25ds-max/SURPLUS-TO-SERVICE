@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}— Dashboard{% endblock %}
+{% block content %}
+
+<!-- Profile header -->
+<div class="d-flex align-items-center gap-3 mb-4">
+  <div class="avatar-circle avatar-lg">{{ session.user_name[:2].upper() }}</div>
+  <div>
+    <h5 class="fw-semibold mb-0">{{ user[1] }}</h5>
+    <p class="text-muted small mb-0 text-capitalize">{{ user[3].replace('_',' ') }} · {{ user[5] or 'Location not set' }}</p>
+  </div>
+  <span class="badge bg-success-subtle text-success ms-auto">Verified node</span>
+</div>
+
+<!-- Impact stats -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card p-3 rounded-3 text-center">
+      <div class="stat-number">{{ total }}</div>
+      <div class="stat-label">exchanges</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card p-3 rounded-3 text-center">
+      <div class="stat-number">{{ saved }} kg</div>
+      <div class="stat-label">food saved</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card p-3 rounded-3 text-center">
+      <div class="stat-number">{{ co2 }} kg</div>
+      <div class="stat-label">CO₂ offset</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card p-3 rounded-3 text-center">
+      <div class="stat-number">{{ active_listings }}</div>
+      <div class="stat-label">active listings</div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick actions -->
+<div class="d-flex gap-2 mb-4">
+  <a href="{{ url_for('post') }}" class="btn btn-success btn-sm">
+    <i class="bi bi-plus-circle me-1"></i> Post new surplus
+  </a>
+  <a href="{{ url_for('browse') }}" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-grid me-1"></i> Browse listings
+  </a>
+</div>
+
+<!-- Exchange history -->
+<h6 class="fw-semibold mb-3">Exchange history</h6>
+{% if exchanges %}
+<div class="table-responsive">
+  <table class="table table-hover align-middle small">
+    <thead class="table-light">
+      <tr>
+        <th>Item</th>
+        <th>Category</th>
+        <th>With</th>
+        <th>Qty</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in exchanges %}
+      <tr>
+        <td class="fw-medium">{{ e[10][:35] }}{% if e[10]|length > 35 %}…{% endif %}</td>
+        <td><span class="badge-category badge-{{ e[11] }}">{{ e[11].capitalize() }}</span></td>
+        <td class="text-muted">
+          {% if e[2] == session.user_id %}
+            → {{ e[13] }}
+          {% else %}
+            ← {{ e[12] }}
+          {% endif %}
+        </td>
+        <td>{{ e[5] }} kg</td>
+        <td class="text-muted">{{ e[7].strftime('%d %b') if e[7] else '—' }}</td>
+        <td>
+          {% if e[6] == 'completed' %}
+            <span class="badge bg-success-subtle text-success">Done</span>
+          {% elif e[6] == 'pending' %}
+            <span class="badge bg-warning-subtle text-warning">Pending</span>
+          {% else %}
+            <span class="badge bg-secondary-subtle text-secondary">{{ e[6].capitalize() }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if e[6] == 'pending' and e[2] == session.user_id %}
+          <a href="{{ url_for('complete_exchange', exchange_id=e[0]) }}"
+             class="btn btn-sm btn-outline-success"
+             onclick="return confirm('Mark this exchange as completed?')">
+            Mark done
+          </a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="text-center text-muted py-4">
+  <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+  No exchanges yet. <a href="{{ url_for('browse') }}" class="text-success">Browse listings</a> to get started.
+</div>
+{% endif %}
+
+{% endblock %}

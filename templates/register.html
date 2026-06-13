@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}— Register{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-5">
+    <div class="text-center mb-4">
+      <span class="brand-icon-lg"><i class="bi bi-arrow-repeat"></i></span>
+      <h4 class="fw-semibold mt-2">Join SURPLUS TO SERVICE</h4>
+      <p class="text-muted small">Register as a node in the circular network</p>
+    </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label small fw-medium">Full name / Organisation</label>
+            <input type="text" name="name" class="form-control" placeholder="e.g. Raju Farms" required/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-medium">Email address</label>
+            <input type="email" name="email" class="form-control" placeholder="you@example.com" required/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-medium">I am a…</label>
+            <select name="role" class="form-select" required>
+              <option value="">Choose your node type</option>
+              <option value="farmer">Farmer</option>
+              <option value="restaurant">Restaurant / food business</option>
+              <option value="ngo">NGO / community kitchen</option>
+              <option value="composter">Composter</option>
+              <option value="community_garden">Community garden</option>
+              <option value="individual">Individual</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-medium">Location</label>
+            <input type="text" name="location" class="form-control" placeholder="e.g. Devanahalli, Karnataka"/>
+          </div>
+          <div class="mb-4">
+            <label class="form-label small fw-medium">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Min. 8 characters" required/>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Create account</button>
+        </form>
+      </div>
+    </div>
+    <p class="text-center text-muted small mt-3">
+      Already registered? <a href="{{ url_for('login') }}" class="text-success">Log in</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
