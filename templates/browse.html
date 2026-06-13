@@ -1,55 +1,242 @@
-{% extends 'base.html' %}
-{% block title %}— Browse{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Browse Surplus - Surplus to Service{% endblock %}
+
 {% block content %}
+<style>
+    /* Page Heading Block */
+    .page-header {
+        margin-bottom: 32px;
+    }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h5 class="fw-semibold mb-0">Available listings</h5>
-  <a href="{{ url_for('post') }}" class="btn btn-sm btn-success">
-    <i class="bi bi-plus-circle me-1"></i> Post surplus
-  </a>
+    .page-header h2 {
+        font-size: 28px;
+        color: #0f172a;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .page-header p {
+        color: #64748b;
+        font-size: 15px;
+    }
+
+    /* Modern Category Pill Navigation */
+    .category-filter-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        /* Hide scrollbar for clean visual appearance */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .category-filter-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 100px;
+        color: #475569;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .filter-pill:hover {
+        border-color: #047857;
+        color: #047857;
+        background: rgba(4, 120, 87, 0.02);
+        transform: translateY(-1px);
+    }
+
+    /* Active category pill highlight */
+    .filter-pill.active {
+        background: #047857;
+        border-color: #047857;
+        color: white;
+        box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2);
+    }
+
+    /* Inventory Visual Card Grid */
+    .browse-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 32px;
+    }
+
+    .browse-card {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .browse-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-main {
+        padding: 24px;
+        flex: 1;
+    }
+
+    .badge-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .item-badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .qty-tag {
+        font-size: 13px;
+        font-weight: 700;
+        color: #047857;
+        background: rgba(4, 120, 87, 0.08);
+        padding: 4px 10px;
+        border-radius: 6px;
+    }
+
+    .browse-card h3 {
+        font-size: 18px;
+        color: #0f172a;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .browse-card p {
+        color: #475569;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .info-line {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .info-line i {
+        width: 16px;
+        text-align: center;
+        color: #94a3b8;
+    }
+
+    .card-action-bar {
+        padding: 20px 24px;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-connect {
+        display: block;
+        text-align: center;
+        background: #047857;
+        color: white;
+        padding: 12px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(4, 120, 87, 0.1);
+    }
+
+    .btn-connect:hover {
+        background: #065f46;
+        box-shadow: 0 6px 16px rgba(4, 120, 87, 0.25);
+        transform: translateY(-1px);
+    }
+</style>
+
+<div class="page-header">
+    <h2>Explore Surplus Allocations</h2>
+    <p>Filter active inventory items by category and secure active nodes system-wide.</p>
 </div>
 
-<!-- Filter tabs -->
-<div class="d-flex gap-2 mb-3 flex-wrap">
-  {% for cat, label in [('all','All'), ('produce','Produce'), ('cooked','Cooked food'), ('bakery','Bakery'), ('compost','Compost'), ('seeds','Seeds')] %}
-  <a href="{{ url_for('browse', category=cat) }}"
-     class="btn btn-sm {% if category == cat %}btn-success{% else %}btn-outline-secondary{% endif %} rounded-pill">
-    {{ label }}
-  </a>
-  {% endfor %}
-</div>
-
-{% if listings %}
-<div class="row g-3">
-  {% for l in listings %}
-  <div class="col-md-6">
-    <a href="{{ url_for('listing_detail', listing_id=l[0]) }}" class="text-decoration-none">
-      <div class="card listing-card h-100 border">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="badge-category badge-{{ l[2] }}">{{ l[2].capitalize() }}</span>
-            <small class="text-muted">Posted by {{ l[10] }}</small>
-          </div>
-          <h6 class="fw-semibold text-dark mb-1">{{ l[3] }}</h6>
-          <div class="d-flex gap-3 small text-muted mt-2">
-            <span><i class="bi bi-box me-1"></i>{{ l[4] }} kg</span>
-            <span><i class="bi bi-clock me-1"></i>Expires {{ l[5].strftime('%d %b %I:%M %p') if l[5] else 'N/A' }}</span>
-            <span><i class="bi bi-geo-alt me-1"></i>{{ l[11] }}</span>
-          </div>
-        </div>
-        <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-          <span class="btn btn-sm btn-outline-success w-100">View & Claim <i class="bi bi-arrow-right"></i></span>
-        </div>
-      </div>
+<div class="category-filter-container">
+    <a href="{{ url_for('browse', category='all') }}" class="filter-pill {% if category == 'all' %}active{% endif %}">
+        <i class="fa-solid fa-border-all"></i> All Categories
     </a>
-  </div>
-  {% endfor %}
+    <a href="{{ url_for('browse', category='Produce') }}" class="filter-pill {% if category == 'Produce' %}active{% endif %}">
+        <i class="fa-solid fa-carrot"></i> Produce
+    </a>
+    <a href="{{ url_for('browse', category='Bakery') }}" class="filter-pill {% if category == 'Bakery' %}active{% endif %}">
+        <i class="fa-solid fa-bread-slice"></i> Bakery
+    </a>
+    <a href="{{ url_for('browse', category='Meals') }}" class="filter-pill {% if category == 'Meals' %}active{% endif %}">
+        <i class="fa-solid fa-bowl-food"></i> Prepared Meals
+    </a>
+    <a href="{{ url_for('browse', category='Other') }}" class="filter-pill {% if category == 'Other' %}active{% endif %}">
+        <i class="fa-solid fa-box"></i> Other Resources
+    </a>
 </div>
-{% else %}
-<div class="text-center text-muted py-5">
-  <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-  No listings found in this category.
+
+<div class="browse-grid">
+    {% for item in listings %}
+    <div class="browse-card">
+        <div class="card-main">
+            <div class="badge-row">
+                <span class="item-badge">{{ item[2] }}</span>
+                <span class="qty-tag">{{ item[4] }} KG</span>
+            </div>
+            <h3>{{ item[3] }}</h3>
+            
+            <div class="info-line">
+                <i class="fa-solid fa-circle-user"></i>
+                <span>Provider: <strong>{{ item[8] }}</strong></span>
+            </div>
+            <div class="info-line">
+                <i class="fa-solid fa-map-pin"></i>
+                <span>Distribution Hub: {{ item[9] }}</span>
+            </div>
+            <div class="info-line">
+                <i class="fa-solid fa-clock"></i>
+                <span>Expires: {{ item[5].strftime('%b %d, %I:%M %p') if item[5] else 'N/A' }}</span>
+            </div>
+        </div>
+        <div class="card-action-bar">
+            <a href="{{ url_for('listing_detail', listing_id=item[0]) }}" class="btn-connect">
+                Request Distribution Connection
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #64748b; background: white; border-radius: 20px; border: 1px solid #e2e8f0;">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 48px; margin-bottom: 16px; color: #cbd5e1;"></i>
+        <p>No listings found matching the select parameters.</p>
+    </div>
+    {% endfor %}
 </div>
-{% endif %}
 
 {% endblock %}
