@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Surplus to Service{% endblock %}</title>
+    <!-- Premium Google Fonts & Vector Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -16,19 +17,19 @@
         }
 
         body {
-            background-color: #f8fafc;
-            color: #0f172a;
+            background-color: #fdfbf7; /* Warm soft cream background */
+            color: #292524; /* Dark espresso text */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Modern Glassmorphic Navbar */
+        /* Glassmorphic Navbar with Warm Accents */
         .navbar {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(253, 251, 247, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            border-bottom: 1px solid rgba(231, 229, 228, 0.8);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -46,7 +47,7 @@
         .nav-brand {
             font-size: 20px;
             font-weight: 700;
-            color: #047857;
+            color: #ea580c; /* Terracotta Primary */
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -61,7 +62,7 @@
         }
 
         .nav-links a {
-            color: #475569;
+            color: #78716c;
             text-decoration: none;
             font-size: 15px;
             font-weight: 500;
@@ -71,23 +72,23 @@
         }
 
         .nav-links a:hover, .nav-links a.active {
-            color: #047857;
-            background: rgba(4, 120, 87, 0.06);
+            color: #ea580c;
+            background: rgba(234, 88, 12, 0.06);
         }
 
         .nav-auth-btn {
-            background: #047857;
+            background: #ea580c;
             color: white !important;
             font-weight: 600 !important;
-            box-shadow: 0 4px 12px rgba(4, 120, 87, 0.15);
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15);
         }
 
         .nav-auth-btn:hover {
-            background: #065f46 !important;
+            background: #c2410c !important;
             transform: translateY(-1px);
         }
 
-        /* Dynamic Main Content Area */
+        /* Main Container */
         .main-content {
             flex: 1;
             max-width: 1200px;
@@ -96,7 +97,6 @@
             padding: 40px 24px;
         }
 
-        /* Global Toast / Notification styling */
         .flash-container {
             max-width: 1200px;
             width: 100%;
@@ -112,16 +112,16 @@
             margin-bottom: 16px;
             border: 1px solid transparent;
         }
-        .alert-success { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+        .alert-success { background: #fef3c7; color: #d97706; border-color: #fde68a; }
         .alert-danger { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
 
         footer {
             text-align: center;
             padding: 24px;
-            color: #64748b;
+            color: #78716c;
             font-size: 14px;
-            border-top: 1px solid #e2e8f0;
-            background: white;
+            border-top: 1px solid #e7e5e4;
+            background: #fcf9f2;
             margin-top: auto;
         }
     </style>
@@ -131,7 +131,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="{{ url_for('index') }}" class="nav-brand">
-                <i class="fa-solid fa-leaf"></i> Surplus to Service
+                <i class="fa-solid fa-sun"></i> Surplus to Service
             </a>
             
             {% if session.get('user_id') %}
@@ -164,11 +164,12 @@
     {% endwith %}
 
     <main class="main-content">
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </main>
 
     <footer>
-        &copy; 2026 Surplus to Service. Empowering sustainable distribution.
+        &copy; 2026 Surplus to Service. Sparking community-driven distribution.
     </footer>
 
 </body>
