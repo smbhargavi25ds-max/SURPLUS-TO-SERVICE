@@ -1,113 +1,278 @@
-{% extends 'base.html' %}
-{% block title %}— Dashboard{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}User Dashboard - Surplus to Service{% endblock %}
+
 {% block content %}
+<style>
+    /* Split Dashboard Grid Layout */
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 32px;
+        align-items: start;
+    }
 
-<!-- Profile header -->
-<div class="d-flex align-items-center gap-3 mb-4">
-  <div class="avatar-circle avatar-lg">{{ session.user_name[:2].upper() }}</div>
-  <div>
-    <h5 class="fw-semibold mb-0">{{ user[1] }}</h5>
-    <p class="text-muted small mb-0 text-capitalize">{{ user[3].replace('_',' ') }} · {{ user[5] or 'Location not set' }}</p>
-  </div>
-  <span class="badge bg-success-subtle text-success ms-auto">Verified node</span>
-</div>
+    /* Left Sidebar Profile Card */
+    .profile-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        padding: 32px 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
 
-<!-- Impact stats -->
-<div class="row g-3 mb-4">
-  <div class="col-6 col-md-3">
-    <div class="stat-card p-3 rounded-3 text-center">
-      <div class="stat-number">{{ total }}</div>
-      <div class="stat-label">exchanges</div>
-    </div>
-  </div>
-  <div class="col-6 col-md-3">
-    <div class="stat-card p-3 rounded-3 text-center">
-      <div class="stat-number">{{ saved }} kg</div>
-      <div class="stat-label">food saved</div>
-    </div>
-  </div>
-  <div class="col-6 col-md-3">
-    <div class="stat-card p-3 rounded-3 text-center">
-      <div class="stat-number">{{ co2 }} kg</div>
-      <div class="stat-label">CO₂ offset</div>
-    </div>
-  </div>
-  <div class="col-6 col-md-3">
-    <div class="stat-card p-3 rounded-3 text-center">
-      <div class="stat-number">{{ active_listings }}</div>
-      <div class="stat-label">active listings</div>
-    </div>
-  </div>
-</div>
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        background: rgba(4, 120, 87, 0.1);
+        color: #047857;
+        font-size: 32px;
+        font-weight: 700;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px auto;
+        text-transform: uppercase;
+    }
 
-<!-- Quick actions -->
-<div class="d-flex gap-2 mb-4">
-  <a href="{{ url_for('post') }}" class="btn btn-success btn-sm">
-    <i class="bi bi-plus-circle me-1"></i> Post new surplus
-  </a>
-  <a href="{{ url_for('browse') }}" class="btn btn-outline-secondary btn-sm">
-    <i class="bi bi-grid me-1"></i> Browse listings
-  </a>
-</div>
+    .profile-card h3 {
+        font-size: 20px;
+        color: #0f172a;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
 
-<!-- Exchange history -->
-<h6 class="fw-semibold mb-3">Exchange history</h6>
-{% if exchanges %}
-<div class="table-responsive">
-  <table class="table table-hover align-middle small">
-    <thead class="table-light">
-      <tr>
-        <th>Item</th>
-        <th>Category</th>
-        <th>With</th>
-        <th>Qty</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for e in exchanges %}
-      <tr>
-        <td class="fw-medium">{{ e[10][:35] }}{% if e[10]|length > 35 %}…{% endif %}</td>
-        <td><span class="badge-category badge-{{ e[11] }}">{{ e[11].capitalize() }}</span></td>
-        <td class="text-muted">
-          {% if e[2] == session.user_id %}
-            → {{ e[13] }}
-          {% else %}
-            ← {{ e[12] }}
-          {% endif %}
-        </td>
-        <td>{{ e[5] }} kg</td>
-        <td class="text-muted">{{ e[7].strftime('%d %b') if e[7] else '—' }}</td>
-        <td>
-          {% if e[6] == 'completed' %}
-            <span class="badge bg-success-subtle text-success">Done</span>
-          {% elif e[6] == 'pending' %}
-            <span class="badge bg-warning-subtle text-warning">Pending</span>
-          {% else %}
-            <span class="badge bg-secondary-subtle text-secondary">{{ e[6].capitalize() }}</span>
-          {% endif %}
-        </td>
-        <td>
-          {% if e[6] == 'pending' and e[2] == session.user_id %}
-          <a href="{{ url_for('complete_exchange', exchange_id=e[0]) }}"
-             class="btn btn-sm btn-outline-success"
-             onclick="return confirm('Mark this exchange as completed?')">
-            Mark done
-          </a>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% else %}
-<div class="text-center text-muted py-4">
-  <i class="bi bi-inbox fs-2 d-block mb-2"></i>
-  No exchanges yet. <a href="{{ url_for('browse') }}" class="text-success">Browse listings</a> to get started.
-</div>
-{% endif %}
+    .role-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        border-radius: 100px;
+        margin-bottom: 24px;
+    }
 
+    .profile-details {
+        text-align: left;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 20px;
+    }
+
+    .detail-item {
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .detail-item label {
+        display: block;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+    }
+
+    .detail-item span {
+        color: #334155;
+        font-weight: 500;
+    }
+
+    /* Right Main Statistics Blocks */
+    .metrics-summary-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+
+    .mini-widget {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .mini-widget .label {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .mini-widget .num {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    /* Activity Logs Table Container */
+    .table-container {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .table-header {
+        padding: 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .table-header h4 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .data-table th {
+        background: #f8fafc;
+        padding: 16px 24px;
+        color: #64748b;
+        font-weight: 600;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .data-table td {
+        padding: 16px 24px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+    }
+
+    /* Status Visual Pill Flags */
+    .status-flag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .status-flag.pending { background: #fef3c7; color: #d97706; }
+    .status-flag.completed { background: #dcfce7; color: #15803d; }
+
+    .action-btn-link {
+        color: #047857;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+    }
+
+    .action-btn-link:hover {
+        color: #065f46;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard-layout">
+    
+    <aside class="profile-card">
+        <div class="profile-avatar">
+            {{ user[1][0] if user and user[1] else 'U' }}
+        </div>
+        <h3>{{ user[1] if user else 'Active Node' }}</h3>
+        <span class="role-tag">{{ user[3] if user else 'Participant' }}</span>
+        
+        <div class="profile-details">
+            <div class="detail-item">
+                <label><i class="fa-regular fa-envelope"></i> Email Address</label>
+                <span>{{ user[2] if user else 'Unavailable' }}</span>
+            </div>
+            <div class="detail-item">
+                <label><i class="fa-solid fa-location-crosshairs"></i> Registered Node</label>
+                <span>{{ user[4] if user else 'Global Network' }}</span>
+            </div>
+        </div>
+    </aside>
+
+    <section class="dashboard-main">
+        
+        <div class="metrics-summary-row">
+            <div class="mini-widget">
+                <div class="label">Total Connections</div>
+                <div class="num">{{ total }}</div>
+            </div>
+            <div class="mini-widget">
+                <div class="label">Personal Footprint Saved</div>
+                <div class="num" style="color: #047857;">{{ saved }} KG</div>
+            </div>
+            <div class="mini-widget">
+                <div class="label">CO₂ Offset</div>
+                <div class="num">{{ co2 }} kg</div>
+            </div>
+            <div class="mini-widget">
+                <div class="label">Active Shares</div>
+                <div class="num">{{ active_listings }}</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h4>System Connection Log</h4>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Resource Description</th>
+                            <th>Donor Link</th>
+                            <th>Recipient Link</th>
+                            <th>Transfer Status</th>
+                            <th>Action Execution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ex in exchanges %}
+                        <tr>
+                            <td><strong>{{ ex[6] }}</strong> <span style="color:#94a3b8;">({{ ex[7] }})</span></td>
+                            <td>{{ ex[9] }}</td>
+                            <td>{{ ex[8] }}</td>
+                            <td>
+                                <span class="status-flag {{ ex[5] }}">{{ ex[5] }}</span>
+                            </td>
+                            <td>
+                                {% if ex[5] == 'pending' and session.get('user_role') == 'donor' %}
+                                <a href="{{ url_for('complete_exchange', exchange_id=ex[0]) }}" class="action-btn-link">
+                                    Mark Transferred
+                                </a>
+                                {% else %}
+                                <span style="color:#cbd5e1; font-size:12px;">No Actions</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: #94a3b8;">
+                                <i class="fa-solid fa-clock-rotate-left" style="font-size: 32px; margin-bottom: 12px; color: #e2e8f0; display:block;"></i>
+                                No tracked allocation connection records found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+</div>
 {% endblock %}
