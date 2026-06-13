@@ -19,7 +19,7 @@
     /* Page Heading Block */
     .page-header {
         margin-bottom: 32px;
-        animation: snappyCardFade 0.4s ease out both;
+        animation: snappyCardFade 0.4s ease-out both;
     }
 
     .page-header h2 {
@@ -27,11 +27,13 @@
         color: #2c3531; /* Deep forest charcoal */
         font-weight: 700;
         margin-bottom: 8px;
+        margin-top: 20px;
     }
 
     .page-header p {
         color: #6b705c; /* Muted olive-beige */
         font-size: 15px;
+        margin-top: 0;
     }
 
     /* Modern Category Pill Navigation */
@@ -84,8 +86,9 @@
     /* Inventory Visual Card Grid */
     .browse-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 32px;
+        margin-bottom: 60px;
     }
 
     .browse-card {
@@ -95,6 +98,111 @@
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         overflow: hidden;
+        padding: 24px;
         transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-        animation:
+        animation: snappyCardFade 0.5s ease both;
+    }
+
+    .browse-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.04);
+        border-color: #3b7a57;
+    }
+
+    .card-badge {
+        background: rgba(59, 122, 87, 0.1);
+        color: #3b7a57;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .action-btn {
+        display: block;
+        text-align: center;
+        background: #3b7a57;
+        color: #ffffff;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background 0.2s, transform 0.1s;
+    }
+
+    .action-btn:hover {
+        background: #2d5e43;
+    }
+</style>
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+    
+    <div class="page-header">
+        <h2>Available Surplus Marketplace</h2>
+        <p>Connect and request allocations from regional distribution network nodes.</p>
+    </div>
+
+    <div class="category-filter-container">
+        <a href="{{ url_for('browse', category='all') }}" class="filter-pill {% if category == 'all' or not category %}active{% endif %}">
+            All Resources
+        </a>
+        <a href="{{ url_for('browse', category='Produce') }}" class="filter-pill {% if category == 'Produce' %}active{% endif %}">
+            Fresh Produce
+        </a>
+        <a href="{{ url_for('browse', category='Bakery') }}" class="filter-pill {% if category == 'Bakery' %}active{% endif %}">
+            Bakery Items
+        </a>
+        <a href="{{ url_for('browse', category='Meals') }}" class="filter-pill {% if category == 'Meals' %}active{% endif %}">
+            Prepared Meals
+        </a>
+        <a href="{{ url_for('browse', category='Other') }}" class="filter-pill {% if category == 'Other' %}active{% endif %}">
+            Other Supplies
+        </a>
+    </div>
+
+    <div class="browse-grid">
+        {% for listing in listings %}
+            {# Only show matching category if a filter is set, or show all if category is 'all' #}
+            {% if category == 'all' or not category or listing[2] == category %}
+            <div class="browse-card">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <span class="card-badge">{{ listing[2] }}</span>
+                        <span style="font-size: 13px; color: #6b705c; font-weight: 600;">{{ listing[4] }} KG</span>
+                    </div>
+                    
+                    <h3 style="margin: 0 0 10px 0; font-size: 19px; color: #2c3531; font-weight: 700; line-height: 1.4;">
+                        {{ listing[3] }}
+                    </h3>
+                    
+                    <p style="color: #6b705c; font-size: 14px; line-height: 1.5; margin: 0 0 20px 0;">
+                        {{ listing[6] }}
+                    </p>
+                </div>
+
+                <div style="border-top: 1px solid #eeebe3; padding-top: 16px; margin-top: 12px;">
+                    <div style="font-size: 13px; color: #6b705c; margin-bottom: 16px; line-height: 1.6;">
+                        <div><strong style="color: #2c3531;">Hub Location:</strong> {{ listing[8] }}</div>
+                        <div><strong style="color: #2c3531;">Street/Area:</strong> {{ listing[9] }}</div>
+                    </div>
+                    
+                    <a href="{{ url_for('listing_detail', listing_id=listing[0]) }}" class="action-btn">
+                        View Asset Records
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        {% else %}
+            <div style="grid-column: 1 / -1; background: #ffffff; border: 2px dashed #eeebe3; border-radius: 20px; padding: 48px; text-align: center; color: #6b705c;">
+                <p style="font-size: 16px; margin: 0 0 8px 0; font-weight: 600;">No Active Inventory Items</p>
+                <p style="font-size: 14px; margin: 0;">There are currently no listings published in the network matrix for this selection.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
