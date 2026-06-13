@@ -1,180 +1,128 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Surplus to Service{% endblock %}</title>
-    
-    <!-- Premium Google Fonts & Vector Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        * {
+        /* Base Resets & Leaf Green Layout Theme Variables */
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fbf9f4; /* Soft Cream Backing */
+            color: #2c3531;
         }
 
-        body {
-            background-color: #fbf9f4; /* Organic soft cream background */
-            color: #2c3531; /* Earthy deep forest charcoal */
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Glassmorphic Navbar with Off-White Base */
-        .navbar {
-            background: rgba(255, 255, 255, 0.85); /* Off-white surface */
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid #eeebe3; /* Soft beige boundary divider */
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 16px 24px;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Top Navigation Header Framework */
+        .navbar-container {
+            background-color: #ffffff;
+            border-bottom: 1px solid #eeebe3;
+            padding: 16px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .nav-brand {
-            font-size: 20px;
+        .navbar-brand-logo {
+            font-size: 18px;
             font-weight: 700;
-            color: #3b7a57; /* Leaf Green */
+            color: #3b7a57; /* Leaf Green Accent */
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .nav-links {
+        .navbar-links-group {
             display: flex;
-            align-items: center;
             gap: 24px;
-            list-style: none;
+            align-items: center;
         }
 
-        .nav-links a {
-            color: #6b705c; /* Muted olive-beige text link */
+        .nav-link-item {
+            color: #6b705c;
             text-decoration: none;
-            font-size: 15px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            padding: 8px 12px;
-            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s ease;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: #3b7a57; /* Leaf Green */
-            background: rgba(59, 122, 87, 0.06);
+        .nav-link-item:hover {
+            color: #3b7a57;
         }
 
-        .nav-auth-btn {
-            background: #3b7a57; /* Leaf Green core emphasis */
-            color: white !important;
-            font-weight: 600 !important;
-            box-shadow: 0 4px 12px rgba(59, 122, 87, 0.15);
+        .nav-logout-btn {
+            color: #b23b3b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        .nav-auth-btn:hover {
-            background: #2d5e43;
-            transform: translateY(-1px);
-        }
-
-        /* Main Center Workspace Layout */
-        .main-content {
-            flex: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 40px 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Assists vertical flex centering down the pipeline */
-        }
-
-        .flash-container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 20px auto 0 auto;
+        /* Central App Structural Frame Enclosure */
+        .main-viewport-wrapper {
+            max-width: 1100px;
+            margin: 40px auto;
             padding: 0 24px;
+            box-sizing: border-box;
         }
 
-        .alert {
-            padding: 16px;
+        /* System Alert Notification Blocks */
+        .flash-messages-stack {
+            margin-bottom: 24px;
+        }
+
+        .flash-alert {
+            padding: 14px 20px;
             border-radius: 12px;
             font-size: 14px;
             font-weight: 500;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             border: 1px solid transparent;
         }
-        .alert-success { background: #e8f5e9; color: #2e7d32; border-color: #c8e6c9; }
-        .alert-danger { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
 
-        footer {
-            text-align: center;
-            padding: 24px;
-            color: #6b705c;
-            font-size: 14px;
-            border-top: 1px solid #eeebe3;
-            background: #f5f2eb; /* Soft beige footer base background */
-            margin-top: auto;
+        .flash-success {
+            background-color: rgba(59, 122, 87, 0.08);
+            color: #3b7a57;
+            border-color: rgba(59, 122, 87, 0.15);
+        }
+
+        .flash-danger {
+            background-color: rgba(178, 59, 59, 0.08);
+            color: #b23b3b;
+            border-color: rgba(178, 59, 59, 0.15);
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="{{ url_for('index') }}" class="nav-brand">
-                <i class="fa-solid fa-leaf"></i> Surplus to Service
-            </a>
-            
-            {% if session.get('user_id') %}
-            <ul class="nav-links">
-                <li><a href="{{ url_for('home') }}"><i class="fa-solid fa-house-chimney"></i> Home</a></li>
-                <li><a href="{{ url_for('browse') }}"><i class="fa-solid fa-magnifying-glass"></i> Browse</a></li>
-                <li><a href="{{ url_for('post') }}"><i class="fa-solid fa-plus"></i> Post Surplus</a></li>
-                <li><a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                <li><a href="{{ url_for('logout') }}" style="color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-            </ul>
-            {% else %}
-            <ul class="nav-links">
-                <li><a href="{{ url_for('login') }}">Sign In</a></li>
-                <li><a href="{{ url_for('register') }}" class="nav-auth-btn">Join Free</a></li>
-            </ul>
-            {% endif %}
+    <nav class="navbar-container">
+        <a href="{{ url_for('home') }}" class="navbar-brand-logo">
+            <i class="fa-solid fa-leaf"></i> Surplus to Service
+        </a>
+        <div class="navbar-links-group">
+            <a href="{{ url_for('home') }}" class="nav-link-item">Home</a>
+            <a href="{{ url_for('browse') }}" class="nav-link-item">Browse Inventory</a>
+            <a href="{{ url_for('post') }}" class="nav-link-item">Post Excess</a>
+            <a href="{{ url_for('dashboard') }}" class="nav-link-item">Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="nav-logout-btn"><i class="fa-solid fa-power-off"></i></a>
         </div>
     </nav>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-container">
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category if category != 'danger' else 'danger' }}">
-                    {{ message }}
+    <main class="main-viewport-wrapper">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages-stack">
+                    {% for category, message in messages %}
+                        <div class="flash-alert flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
+            {% endif %}
+        {% endwith %}
 
-    <main class="main-content">
         {% block content %}
         {% endblock %}
     </main>
-
-    <footer>
-        &copy; 2026 Surplus to Service. Rooted in sustainable distribution.
-    </footer>
 
 </body>
 </html>
