@@ -1,51 +1,206 @@
-{% extends 'base.html' %}
-{% block title %}— Register{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Register - Surplus to Service{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center mt-4">
-  <div class="col-md-5">
-    <div class="text-center mb-4">
-      <span class="brand-icon-lg"><i class="bi bi-arrow-repeat"></i></span>
-      <h4 class="fw-semibold mt-2">Join SURPLUS TO SERVICE</h4>
-      <p class="text-muted small">Register as a node in the circular network</p>
-    </div>
-    <div class="card border-0 shadow-sm">
-      <div class="card-body p-4">
-        <form method="POST">
-          <div class="mb-3">
-            <label class="form-label small fw-medium">Full name / Organisation</label>
-            <input type="text" name="name" class="form-control" placeholder="e.g. Raju Farms" required/>
-          </div>
-          <div class="mb-3">
-            <label class="form-label small fw-medium">Email address</label>
-            <input type="email" name="email" class="form-control" placeholder="you@example.com" required/>
-          </div>
-          <div class="mb-3">
-            <label class="form-label small fw-medium">I am a…</label>
-            <select name="role" class="form-select" required>
-              <option value="">Choose your node type</option>
-              <option value="farmer">Farmer</option>
-              <option value="restaurant">Restaurant / food business</option>
-              <option value="ngo">NGO / community kitchen</option>
-              <option value="composter">Composter</option>
-              <option value="community_garden">Community garden</option>
-              <option value="individual">Individual</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label small fw-medium">Location</label>
-            <input type="text" name="location" class="form-control" placeholder="e.g. Devanahalli, Karnataka"/>
-          </div>
-          <div class="mb-4">
-            <label class="form-label small fw-medium">Password</label>
-            <input type="password" name="password" class="form-control" placeholder="Min. 8 characters" required/>
-          </div>
-          <button type="submit" class="btn btn-success w-100">Create account</button>
+<style>
+    /* Premium Entry Scale and Fade Animation */
+    @keyframes snappyFadeIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.96) translateY(15px);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    /* Full Page Layout Centering Containment */
+    .viewport-center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 75vh;
+        width: 100%;
+        padding: 20px 0;
+    }
+
+    /* Off-White Registration Card over Cream Canvas */
+    .auth-card-panel {
+        background: #ffffff;
+        border: 1px solid #eeebe3;
+        border-radius: 24px;
+        padding: 40px 32px;
+        width: 100%;
+        max-width: 460px; /* Enhanced space for registration layouts */
+        box-shadow: 0 10px 30px rgba(59, 122, 87, 0.04), 0 1px 3px rgba(0, 0, 0, 0.01);
+        text-align: center;
+        animation: snappyFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .auth-card-panel h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #2c3531;
+        letter-spacing: -0.5px;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+    }
+
+    .auth-card-panel p {
+        color: #6b705c;
+        font-size: 14px;
+        margin-bottom: 32px;
+    }
+
+    /* Dynamic Grid Layout for Grouped Content */
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-field-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .form-field-group label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        color: #6b705c;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+    }
+
+    .input-field-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #eeebe3;
+        border-radius: 12px;
+        font-size: 14px;
+        color: #2c3531;
+        background-color: #fbf9f4;
+        transition: all 0.2s ease-in-out;
+        box-sizing: border-box;
+    }
+
+    .input-field-control:focus {
+        outline: none;
+        border-color: #3b7a57;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 5px rgba(59, 122, 87, 0.12);
+    }
+
+    select.input-field-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b705c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        background-size: 14px;
+        padding-right: 40px;
+        cursor: pointer;
+    }
+
+    .action-submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #3b7a57 0%, #2d5e43 100%);
+        color: #ffffff;
+        border: none;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 12px rgba(59, 122, 87, 0.18);
+        margin-top: 10px;
+        box-sizing: border-box;
+    }
+
+    .action-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 122, 87, 0.3);
+        letter-spacing: 0.3px;
+    }
+
+    .auth-panel-footer {
+        margin-top: 28px;
+        font-size: 14px;
+        color: #6b705c;
+        border-top: 1px solid #eeebe3;
+        padding-top: 20px;
+    }
+
+    .auth-panel-footer a {
+        color: #3b7a57;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+    }
+
+    .auth-panel-footer a:hover {
+        color: #2d5e43;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+    }
+</style>
+
+<div class="viewport-center-container">
+    <div class="auth-card-panel">
+        <h2>Surplus to Service</h2>
+        <p>Create your infrastructure node account</p>
+        
+        <form action="{{ url_for('register') }}" method="POST">
+            
+            <div class="form-row">
+                <div class="form-field-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" class="input-field-control" placeholder="User node handle" required autocomplete="username">
+                </div>
+                
+                <div class="form-field-group">
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="email" class="input-field-control" placeholder="name@domain.com" required autocomplete="email">
+                </div>
+            </div>
+            
+            <div class="form-field-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="input-field-control" placeholder="••••••••" required autocomplete="new-password">
+            </div>
+
+            <div class="form-row">
+                <div class="form-field-group">
+                    <label for="role">Node Role</label>
+                    <select id="role" name="role" class="input-field-control" required>
+                        <option value="" disabled selected>Select system role</option>
+                        <option value="donor">Donor (Surplus Host)</option>
+                        <option value="recipient">Recipient (Distribution Hub)</option>
+                    </select>
+                </div>
+                
+                <div class="form-field-group">
+                    <label for="location">Location Hub</label>
+                    <input type="text" id="location" name="location" class="input-field-control" placeholder="City or Region" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="action-submit-btn">Register Node</button>
         </form>
-      </div>
+        
+        <div class="auth-panel-footer">
+            Already registered? <a href="{{ url_for('login') }}">Log in here</a>
+        </div>
     </div>
-    <p class="text-center text-muted small mt-3">
-      Already registered? <a href="{{ url_for('login') }}" class="text-success">Log in</a>
-    </p>
-  </div>
 </div>
 {% endblock %}
