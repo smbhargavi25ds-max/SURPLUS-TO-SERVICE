@@ -4,20 +4,33 @@
 
 {% block content %}
 <style>
+    /* Keyframe for smooth layout entry fade-in animation */
+    @keyframes snappyCardFade {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     /* Page Heading Block */
     .page-header {
         margin-bottom: 32px;
+        animation: snappyCardFade 0.4s ease out both;
     }
 
     .page-header h2 {
-        font-size: 28px;
-        color: #292524; /* Dark espresso */
+        font-size: 26px;
+        color: #2c3531; /* Deep forest charcoal */
         font-weight: 700;
         margin-bottom: 8px;
     }
 
     .page-header p {
-        color: #78716c; /* Soft stone dark */
+        color: #6b705c; /* Muted olive-beige */
         font-size: 15px;
     }
 
@@ -41,31 +54,31 @@
         align-items: center;
         gap: 8px;
         padding: 10px 20px;
-        background: white;
-        border: 1px solid #e7e5e4;
+        background: #ffffff; /* Off-white card surface */
+        border: 1px solid #eeebe3; /* Beige border splits */
         border-radius: 100px;
-        color: #57534e;
+        color: #6b705c;
         text-decoration: none;
         font-size: 14px;
         font-weight: 600;
         white-space: nowrap;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
     }
 
     .filter-pill:hover {
-        border-color: #ea580c; /* Terracotta hover */
-        color: #ea580c;
-        background: rgba(234, 88, 12, 0.02);
+        border-color: #3b7a57; /* Leaf Green Focus outline */
+        color: #3b7a57;
+        background: rgba(59, 122, 87, 0.04);
         transform: translateY(-1px);
     }
 
-    /* Active category pill highlight - Amber/Terracotta theme */
+    /* Active category pill highlight - Organic Green theme */
     .filter-pill.active {
-        background: #ea580c;
-        border-color: #ea580c;
+        background: #3b7a57;
+        border-color: #3b7a57;
         color: white;
-        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
+        box-shadow: 0 4px 12px rgba(59, 122, 87, 0.2);
     }
 
     /* Inventory Visual Card Grid */
@@ -76,168 +89,12 @@
     }
 
     .browse-card {
-        background: white;
+        background: #ffffff; /* Off-white structural card overlay */
         border-radius: 20px;
-        border: 1px solid #e7e5e4;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eeebe3; /* Soft beige boundary line */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .browse-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 25px -5px rgba(234, 88, 12, 0.08);
-    }
-
-    .card-main {
-        padding: 24px;
-        flex: 1;
-    }
-
-    .badge-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-    }
-
-    .item-badge {
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        background: #fef3c7; /* Warm Amber Tint */
-        color: #d97706; /* Dark Amber */
-    }
-
-    .qty-tag {
-        font-size: 13px;
-        font-weight: 700;
-        color: #ea580c;
-        background: rgba(234, 88, 12, 0.08);
-        padding: 4px 10px;
-        border-radius: 6px;
-    }
-
-    .browse-card h3 {
-        font-size: 18px;
-        color: #292524;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
-
-    .browse-card p {
-        color: #57534e;
-        font-size: 14px;
-        line-height: 1.5;
-        margin-bottom: 20px;
-    }
-
-    .info-line {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: #78716c;
-        font-size: 13px;
-        margin-bottom: 10px;
-    }
-
-    .info-line i {
-        width: 16px;
-        text-align: center;
-        color: #a8a29e;
-    }
-
-    .card-action-bar {
-        padding: 20px 24px;
-        background: #faf8f5;
-        border-top: 1px solid #e7e5e4;
-    }
-
-    .btn-connect {
-        display: block;
-        text-align: center;
-        background: #ea580c; /* Terracotta */
-        color: white;
-        padding: 12px;
-        border-radius: 12px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 14px;
-        transition: all 0.2s ease;
-        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.1);
-    }
-
-    .btn-connect:hover {
-        background: #c2410c;
-        box-shadow: 0 6px 16px rgba(234, 88, 12, 0.25);
-        transform: translateY(-1px);
-    }
-</style>
-
-<div class="page-header">
-    <h2>Explore Surplus Allocations</h2>
-    <p>Filter active inventory items by category and secure active nodes system-wide.</p>
-</div>
-
-<!-- Dynamic Filter Pills -->
-<div class="category-filter-container">
-    <a href="{{ url_for('browse', category='all') }}" class="filter-pill {% if category == 'all' %}active{% endif %}">
-        <i class="fa-solid fa-border-all"></i> All Categories
-    </a>
-    <a href="{{ url_for('browse', category='Produce') }}" class="filter-pill {% if category == 'Produce' %}active{% endif %}">
-        <i class="fa-solid fa-carrot"></i> Produce
-    </a>
-    <a href="{{ url_for('browse', category='Bakery') }}" class="filter-pill {% if category == 'Bakery' %}active{% endif %}">
-        <i class="fa-solid fa-bread-slice"></i> Bakery
-    </a>
-    <a href="{{ url_for('browse', category='Meals') }}" class="filter-pill {% if category == 'Meals' %}active{% endif %}">
-        <i class="fa-solid fa-bowl-food"></i> Prepared Meals
-    </a>
-    <a href="{{ url_for('browse', category='Other') }}" class="filter-pill {% if category == 'Other' %}active{% endif %}">
-        <i class="fa-solid fa-box"></i> Other Resources
-    </a>
-</div>
-
-<!-- Results Card Grid -->
-<div class="browse-grid">
-    {% for item in listings %}
-    <div class="browse-card">
-        <div class="card-main">
-            <div class="badge-row">
-                <span class="item-badge">{{ item[2] }}</span>
-                <span class="qty-tag">{{ item[4] }} KG</span>
-            </div>
-            <h3>{{ item[3] }}</h3>
-            
-            <div class="info-line">
-                <i class="fa-solid fa-circle-user"></i>
-                <span>Provider: <strong>{{ item[8] }}</strong></span>
-            </div>
-            <div class="info-line">
-                <i class="fa-solid fa-map-pin"></i>
-                <span>Distribution Hub: {{ item[9] }}</span>
-            </div>
-            <div class="info-line">
-                <i class="fa-solid fa-clock"></i>
-                <span>Expires: {{ item[5].strftime('%b %d, %I:%M %p') if item[5] else 'N/A' }}</span>
-            </div>
-        </div>
-        <div class="card-action-bar">
-            <a href="{{ url_for('listing_detail', listing_id=item[0]) }}" class="btn-connect">
-                Request Distribution Connection
-            </a>
-        </div>
-    </div>
-    {% else %}
-    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #78716c; background: white; border-radius: 20px; border: 1px solid #e7e5e4;">
-        <i class="fa-solid fa-magnifying-glass" style="font-size: 48px; margin-bottom: 16px; color: #d6d3d1;"></i>
-        <p>No listings found matching the select parameters.</p>
-    </div>
-    {% endfor %}
-</div>
-
-{% endblock %}
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        animation:
