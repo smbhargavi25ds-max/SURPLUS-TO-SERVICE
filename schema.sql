@@ -1,9 +1,10 @@
--- Run this in MySQL Workbench or CLI: mysql -u root -p < schema.sql
+-   Run this in MySQL Workbench or CLI: mysql -u root -p < schema.sql
 
 CREATE DATABASE IF NOT EXISTS surplus_service;
 USE surplus_service;
 
 CREATE TABLE IF NOT EXISTS users (
+    
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
@@ -50,3 +51,5 @@ INSERT INTO listings (user_id, category, description, quantity_kg, expires_at, p
 (1, 'produce', 'Mixed vegetables — fresh from farm', 15.00, DATE_ADD(NOW(), INTERVAL 8 HOUR), 'self_collect'),
 (2, 'cooked', 'Dal & rice — 30 portions', 12.00, DATE_ADD(NOW(), INTERVAL 5 HOUR), 'i_deliver'),
 (1, 'seeds', 'Tomato seeds — 200 packets', 2.00, DATE_ADD(NOW(), INTERVAL 7 DAY), 'either');
+
+
