@@ -4,15 +4,28 @@
 
 {% block content %}
 <style>
-    /* Hero Welcome Section */
+    /* Smooth Layout Entry Motion Trigger */
+    @keyframes snappyHomeFade {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Welcome Hero Banner Banner Frame */
     .hero-section {
-        background: linear-gradient(135deg, #ea580c 0%, #d97706 100%); /* Terracotta to Amber Gradient */
+        background: linear-gradient(135deg, #3b7a57 0%, #2d5e43 100%); /* Organic Leaf Green Gradient */
         border-radius: 24px;
         padding: 60px 40px;
-        color: white;
+        color: #ffffff;
         text-align: center;
         margin-bottom: 40px;
-        box-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.2);
+        box-shadow: 0 10px 25px -5px rgba(59, 122, 87, 0.15);
+        animation: snappyHomeFade 0.4s ease-out both;
     }
 
     .hero-section h1 {
@@ -30,34 +43,38 @@
         line-height: 1.6;
     }
 
+    /* Off-White CTA Highlight Button */
     .hero-cta-btn {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: white;
-        color: #ea580c;
+        background: #ffffff; /* Off-white surface block button */
+        color: #3b7a57;
         padding: 14px 28px;
         border-radius: 12px;
         font-weight: 600;
         text-decoration: none;
-        transition: all 0.2s ease;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
 
     .hero-cta-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        background: #fdfbf7;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        background: #fbf9f4; /* Subtle cream shift */
     }
 
-    /* Quick Action Section */
+    /* Grid Heading Structure */
     .section-title {
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 700;
-        color: #292524;
+        color: #2c3531;
         margin-bottom: 24px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
+    /* Dynamic Operational Action Cards */
     .action-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -66,27 +83,30 @@
     }
 
     .action-card {
-        background: white;
-        border: 1px solid #e7e5e4;
+        background: #ffffff; /* Clean off-white surface */
+        border: 1px solid #eeebe3; /* Soft beige outlines */
         border-radius: 20px;
         padding: 32px 24px;
         text-align: left;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+        animation: snappyHomeFade 0.5s ease-out both;
     }
 
+    /* Catchy Hover Elastic Transformation */
     .action-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 20px -3px rgba(234, 88, 12, 0.05);
-        border-color: #ea580c;
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 16px 24px -5px rgba(59, 122, 87, 0.05);
+        border-color: #3b7a57; /* Highlight border on cursor focus */
     }
 
+    /* Icons Wrapper Enclosures */
     .icon-wrapper {
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        background: rgba(234, 88, 12, 0.1);
-        color: #ea580c;
+        background: rgba(59, 122, 87, 0.08); /* Organic soft green backdrop background */
+        color: #3b7a57;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -96,116 +116,73 @@
 
     .action-card h3 {
         font-size: 18px;
-        color: #292524;
+        color: #2c3531;
         font-weight: 700;
         margin-bottom: 8px;
     }
 
     .action-card p {
-        color: #78716c;
+        color: #6b705c; /* Muted olive-beige */
         font-size: 14px;
         line-height: 1.5;
         margin-bottom: 20px;
     }
 
     .action-link {
-        color: #ea580c;
+        color: #3b7a57;
         text-decoration: none;
         font-weight: 600;
         font-size: 14px;
         display: inline-flex;
         align-items: center;
         gap: 4px;
+        transition: color 0.2s ease;
     }
 
     .action-link:hover {
-        color: #c2410c;
+        color: #2d5e43;
         text-decoration: underline;
     }
 
-    /* Environmental Impact Counter Block */
+    /* Environmental Statistics Aggregate Card Block */
     .impact-showcase {
-        background: #faf8f5;
-        border: 1px solid #e7e5e4;
+        background: #ffffff; /* Off-white container */
+        border: 1px solid #eeebe3;
         border-radius: 20px;
         padding: 32px;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 24px;
         text-align: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+        animation: snappyHomeFade 0.6s ease-out both;
     }
 
     .impact-stat h4 {
         font-size: 32px;
         font-weight: 700;
-        color: #d97706; /* Amber Impact Number */
+        color: #3b7a57; /* Leaf Green Counter Output */
         margin-bottom: 4px;
     }
 
     .impact-stat p {
         font-size: 14px;
-        color: #57534e;
+        color: #6b705c;
         font-weight: 500;
     }
 </style>
 
-<!-- Welcome Hero banner -->
 <section class="hero-section">
     <h1>Welcome back to the Network</h1>
-    <p>Monitor your active hub allocations, route excess logistics, and reduce localized distribution footprints in real time.</p>
+    <p>Monitor active hub allocations, route excess logistics, and reduce localized distribution footprints in real time.</p>
     <a href="{{ url_for('browse') }}" class="hero-cta-btn">
         Browse Current Surplus <i class="fa-solid fa-arrow-right"></i>
     </a>
 </section>
 
-<!-- System Portals Actions -->
 <h2 class="section-title">System Portals</h2>
 <div class="action-grid">
     
     <div class="action-card">
         <div class="icon-wrapper">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
-        <h3>Browse Resources</h3>
-        <p>Explore current real-time community resource listings and request active connections.</p>
-        <a href="{{ url_for('browse') }}" class="action-link">View Marketplace &rarr;</a>
-    </div>
-
-    <div class="action-card">
-        <div class="icon-wrapper">
-            <i class="fa-solid fa-plus"></i>
-        </div>
-        <h3>Post Excess Log</h3>
-        <p>Log available resource batches to make them instantly discoverable by nearby nodes.</p>
-        <a href="{{ url_for('post') }}" class="action-link">Create Record &rarr;</a>
-    </div>
-
-    <div class="action-card">
-        <div class="icon-wrapper">
-            <i class="fa-solid fa-chart-pie"></i>
-        </div>
-        <h3>Activity Monitor</h3>
-        <p>Track your verified metrics, carbon mitigation impact scores, and transaction history.</p>
-        <a href="{{ url_for('dashboard') }}" class="action-link">Open Dashboard &rarr;</a>
-    </div>
-
-</div>
-
-<!-- Environmental Metrics Rollup -->
-<h2 class="section-title">Global Impact Metric Aggregations</h2>
-<div class="impact-showcase">
-    <div class="impact-stat">
-        <h4>1,420 KG</h4>
-        <p>Aggregated Surplus Diverted</p>
-    </div>
-    <div class="impact-stat">
-        <h4>3,550 kg</h4>
-        <p>Total $\text{CO}_2$ Mitigation</p>
-    </div>
-    <div class="impact-stat">
-        <h4>412</h4>
-        <p>Active Verified Nodes</p>
-    </div>
-</div>
-
-{% endblock %}
+            <i class="fa-solid fa-server">
