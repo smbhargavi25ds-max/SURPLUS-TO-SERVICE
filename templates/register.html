@@ -1,35 +1,67 @@
 {% extends "base.html" %}
 
-{% block title %}Register Node - Surplus to Service{% endblock %}
+{% block title %}Register Profile — Surplus to Service{% endblock %}
 
 {% block content %}
-<style>
-    .auth-box {
-        max-width: 400px;
-        margin: 40px auto;
-        background: white;
-        padding: 32px;
-        border-radius: 24px;
-        border: 1px solid #eeebe3;
-    }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight:700; color:#6b705c; margin-bottom: 6px; text-transform: uppercase; }
-    .form-control { width: 100%; padding: 12px; border: 2px solid #eeebe3; border-radius: 12px; box-sizing: border-box; }
-    .btn { width: 100%; background: #3b7a57; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 12px; }
-</style>
+<div style="display: flex; justify-content: center; align-items: flex-start; padding: 48px 16px; min-height: 100vh; background: #f7f6f2;">
+  <div style="width: 100%; max-width: 400px; background: #ffffff; border: 1px solid #eae8e1; border-radius: 20px; padding: 32px; font-family: system-ui, -apple-system, sans-serif;">
 
-<div class="auth-box">
-    <h2 style="margin-top:0; text-align: center;">Register Distribution Node</h2>
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
+      <div style="width: 32px; height: 32px; background: #3b7a57; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+        <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+        </svg>
+      </div>
+      <span style="font-size: 13px; font-weight: 500; color: #6b705c; letter-spacing: 0.02em;">Surplus to Service</span>
+    </div>
+
+    <h2 style="font-size: 20px; font-weight: 600; color: #2c3531; margin: 0 0 4px;">Create an account</h2>
+    <p style="font-size: 13px; color: #6b705c; margin: 0 0 24px;">Register a new distribution node profile</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding: 10px 14px; margin-bottom: 20px; border-radius: 10px; font-size: 13px; background: #fdf2f2; color: #b33030; border: 1px solid #f5c0c0;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     <form action="{{ url_for('register') }}" method="POST">
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label>Email Access Point</label>
-            <input type="email" name="email" class="form-control" required>
-        </div>
-        <button type="submit" class="btn">Create Network Account</button>
+
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 12px; font-weight: 600; color: #6b705c; margin-bottom: 6px; letter-spacing: 0.03em; text-transform: uppercase;">Username</label>
+        <input type="text" name="username" placeholder="Choose a username" required
+          style="width: 100%; padding: 10px 14px; border: 1px solid #dddbd4; border-radius: 10px; font-size: 14px; color: #2c3531; background: #fff; box-sizing: border-box; outline: none;"
+          onfocus="this.style.borderColor='#3b7a57'" onblur="this.style.borderColor='#dddbd4'">
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 12px; font-weight: 600; color: #6b705c; margin-bottom: 6px; letter-spacing: 0.03em; text-transform: uppercase;">Email address</label>
+        <input type="email" name="email" placeholder="name@organisation.org" required
+          style="width: 100%; padding: 10px 14px; border: 1px solid #dddbd4; border-radius: 10px; font-size: 14px; color: #2c3531; background: #fff; box-sizing: border-box; outline: none;"
+          onfocus="this.style.borderColor='#3b7a57'" onblur="this.style.borderColor='#dddbd4'">
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <label style="display: block; font-size: 12px; font-weight: 600; color: #6b705c; margin-bottom: 6px; letter-spacing: 0.03em; text-transform: uppercase;">Password</label>
+        <input type="password" name="password" placeholder="••••••••" required
+          style="width: 100%; padding: 10px 14px; border: 1px solid #dddbd4; border-radius: 10px; font-size: 14px; color: #2c3531; background: #fff; box-sizing: border-box; outline: none;"
+          onfocus="this.style.borderColor='#3b7a57'" onblur="this.style.borderColor='#dddbd4'">
+      </div>
+
+      <button type="submit"
+        style="width: 100%; padding: 11px; background: #3b7a57; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; letter-spacing: 0.01em;">
+        Sign up
+      </button>
+
     </form>
+
+    <p style="text-align: center; margin: 20px 0 0; font-size: 13px; color: #6b705c;">
+      Already have an account? <a href="{{ url_for('login') }}" style="color: #3b7a57; font-weight: 600; text-decoration: none;">Sign in</a>
+    </p>
+
+  </div>
 </div>
 {% endblock %}

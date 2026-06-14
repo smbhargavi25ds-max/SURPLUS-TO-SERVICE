@@ -58,14 +58,17 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # SAFE PATCH: Using .get() ensures registration doesn't break if an HTML input field is omitted
-        name = request.form.get('name')
+        # Capture the inputs safely from the registration form
+        username = request.form.get('username')
         email = request.form.get('email')
-        role = request.form.get('role')
-        location = request.form.get('location')
+        password = request.form.get('password')
         
-        flash('Account created! Please log in.', 'success')
-        return redirect(url_for('login'))
+        # Simulating a successful database entry pass
+        if username and email and password:
+            flash('Account created successfully! Please sign in with your new node profile.', 'success')
+            return redirect(url_for('login'))
+            
+        flash('Please fill out all required fields to register.', 'danger')
     return render_template('register.html')
 
 @app.route('/logout')
