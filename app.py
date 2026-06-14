@@ -1,17 +1,25 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+import urllib.parse  # Used to safely handle special characters like '@' in database passwords
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
 # -------------------------------------------------------------------------
-# DATABASE CONFIGURATION
+# DATABASE CONFIGURATION (Local MySQL vs Live Production Render)
 # -------------------------------------------------------------------------
-if os.environ.get('RENDER'):
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    # Modernizes older cloud connection strings automatically to prevent engine crashes
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/surplus_service'
+    # Safely URL-encodes your password so the '@' doesn't break your local machine path
+    encoded_password = urllib.parse.quote_plus("Smbsmb@2007")
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:{encoded_password}@localhost/surplus_service'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -25,7 +33,7 @@ class User(db.Model):
     username = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False) 
+    password = db.Column(db.String(255), nullable=False)  # Aligned with your local MySQL column name
     role = db.Column(db.String(50), nullable=False, default='farmer')
     location = db.Column(db.String(200), nullable=True)
 
@@ -62,6 +70,7 @@ def register():
             flash('Email already registered!', 'danger')
             return redirect(url_for('register'))
             
+        # Forces role to lower case to conform to your local MySQL ENUM constraints
         new_user = User(username=username, name=name, email=email, password=password, role=role.lower())
         db.session.add(new_user)
         db.session.commit()
@@ -74,6 +83,8 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        
+        # Look up using the column key name matching your database structure
         user = User.query.filter_by(email=email, password=password).first()
         if user:
             session['user_id'] = user.id
@@ -104,7 +115,7 @@ def post():
             description=request.form.get('description'),
             weight=float(request.form.get('weight') or 0.0),
             expires_at=request.form.get('expires_at'),
-            pickup_info=request.form.get('pickup_preference'), # Form names match image definitions
+            pickup_info=request.form.get('pickup_preference'),
             location_name=request.form.get('location_name', ''),
             address=request.form.get('address', '')
         )
@@ -114,20 +125,23 @@ def post():
         return redirect(url_for('browse'))
     return render_template('post.html')
 
+# Single, unique endpoint route setup - resolves the duplicate mapping AssertionError
 @app.route('/listing/<int:listing_id>')
 def listing_detail(listing_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    # Correct variable declarations remove Pylance highlights completely
-    listing_item = Listing.query.get_or_404(listing_id)
-    return render_template('listing_detail.html', listing=listing_item)
+    # Correct variable definition resolves Pylance warnings completely
+    listing = Listing.query.get_or_404(listing_id)
+    return render_template('listing_detail.html', listing=listing)
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
 
-# Automatically build modern structures on app launch environment setup
+# -------------------------------------------------------------------------
+# STARTUP OPERATION
+# -------------------------------------------------------------------------
 with app.app_context():
     db.create_all()
 
