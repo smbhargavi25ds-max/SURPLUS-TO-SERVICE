@@ -1,72 +1,80 @@
 {% extends "base.html" %}
-
-{% block title %}Log Excess Asset - Surplus to Service{% endblock %}
-
 {% block content %}
-<style>
-    .form-container {
-        max-width: 500px;
-        margin: 0 auto;
-        background: #ffffff;
-        border: 1px solid #eeebe3;
-        border-radius: 24px;
-        padding: 32px;
-    }
-    .form-group {
-        margin-bottom: 20px;
-    }
-    .form-group label {
-        display: block;
-        font-size: 12px;
-        font-weight: 700;
-        color: #6b705c;
-        margin-bottom: 8px;
-        text-transform: uppercase;
-    }
-    .form-control {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid #eeebe3;
-        border-radius: 12px;
-        box-sizing: border-box;
-        background: #fbf9f4;
-    }
-    .form-control:focus {
-        outline: none;
-        border-color: #3b7a57;
-    }
-    .submit-btn {
-        width: 100%;
-        background: #3b7a57;
-        color: white;
-        border: none;
-        padding: 14px;
-        border-radius: 12px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-</style>
+<div style="max-width: 600px; margin: 40px auto; padding: 32px; background: #fff; border: 1px solid #eae8e1; border-radius: 16px; font-family: system-ui, -apple-system, sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+  
+  <h2 style="margin-top: 0; color: #2c3531; font-size: 24px; font-weight: 700;">Post a surplus listing</h2>
+  <p style="color: #6b705c; margin-bottom: 28px; margin-top: 0; font-size: 15px;">Share your leftover food or resources with the network.</p>
+  
+  <form action="{{ url_for('post') }}" method="POST">
+    
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 13px; font-weight: 600; color: #4a4a4a; margin-bottom: 6px;">TITLE / RESOURCE NAME</label>
+      <input type="text" name="title" placeholder="e.g., Surplus Bakery Item Lot" required style="width: 100%; padding: 11px; border: 1px solid #dddbd4; border-radius: 8px; box-sizing: border-box; font-size: 14px;">
+    </div>
 
-<div class="form-container">
-    <h2 style="margin-top:0; margin-bottom: 24px;">Log Excess Surplus Batch</h2>
-    <form action="{{ url_for('post') }}" method="POST">
-        <div class="form-group">
-            <label>Title / Resource Name</label>
-            <input type="text" name="title" class="form-control" placeholder="e.g., Surplus Bakery Item Lot" required>
-        </div>
-        <div class="form-group">
-            <label>Category Configuration</label>
-            <select name="category" class="form-control">
-                <option value="Produce">Produce</option>
-                <option value="Bakery">Bakery</option>
-                <option value="Meals">Meals</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Quantity Metric Mass (KG)</label>
-            <input type="number" step="0.1" name="quantity" class="form-control" placeholder="0.0" required>
-        </div>
-        <button type="submit" class="submit-btn">Publish Batch Entry</button>
-    </form>
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 13px; font-weight: 600; color: #4a4a4a; margin-bottom: 6px;">CATEGORY</label>
+      <select name="category" required style="width: 100%; padding: 11px; border: 1px solid #dddbd4; border-radius: 8px; background: #fff; box-sizing: border-box; font-size: 14px;">
+        <option value="" disabled selected>Choose a category</option>
+        <option value="Produce">Produce / vegetables</option>
+        <option value="Meals">Cooked food</option>
+        <option value="Bakery">Bakery items</option>
+        <option value="Organic Waste">Compost / organic waste</option>
+        <option value="Seeds">Seeds / saplings</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 13px; font-weight: 600; color: #4a4a4a; margin-bottom: 6px;">DESCRIPTION</label>
+      <textarea name="description" rows="3" placeholder="e.g. Mixed vegetables, fresh" required style="width: 100%; padding: 11px; border: 1px solid #dddbd4; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 14px; resize: vertical;"></textarea>
+      <small style="display: block; color: #8a8d81; font-size: 12px; margin-top: 4px;">Be specific so recipients know what to expect.</small>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 13px; font-weight: 600; color: #4a4a4a; margin-bottom: 6px;">QUANTITY (KG)</label>
+      <input type="number" step="0.1" name="weight" placeholder="e.g. 15" required style="width: 100%; padding: 11px; border: 1px solid #dddbd4; border-radius: 8px; box-sizing: border-box; font-size: 14px;">
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 13px; font-weight: 600; color: #4a4a4a; margin-bottom: 6px;">EXPIRES AT</label>
+      <input type="datetime-local" name="expires_at" required style="width: 100%; padding: 11px; border: 1px solid #dddbd4; border-radius: 8px; box-sizing: border-box; font-size: 14px; font-family: inherit;">
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <label style="display: block; font-size: 13px; font-weight: 600; color: #4a4a4a; margin-bottom: 6px;">PICKUP PREFERENCE</label>
+      <select name="pickup_info" required style="width: 100%; padding: 11px; border: 1px solid #dddbd4; border-radius: 8px; background: #fff; box-sizing: border-box; font-size: 14px;">
+        <option value="Recipient self-collects">Recipient self-collects</option>
+        <option value="I can deliver (within 5 km)">I can deliver (within 5 km)</option>
+        <option value="Either works">Either works</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 13px; font-weight: 600; color: #4a4a4a; margin-bottom: 6px;">HUB LOCATION NAME</label>
+      <input type="text" name="location_name" placeholder="e.g., Central Distribution Hub" style="width: 100%; padding: 11px; border: 1px solid #dddbd4; border-radius: 8px; box-sizing: border-box; font-size: 14px;">
+    </div>
+
+    <div style="margin-bottom: 32px;">
+      <label style="display: block; font-size: 13px; font-weight: 600; color: #4a4a4a; margin-bottom: 6px;">STREET ADDRESS</label>
+      <input type="text" name="address" placeholder="e.g., 456 Ecosystem Way" style="width: 100%; padding: 11px; border: 1px solid #dddbd4; border-radius: 8px; box-sizing: border-box; font-size: 14px;">
+    </div>
+
+    <button type="submit" style="width: 100%; padding: 14px; background: #3b7a57; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s ease;">
+      Publish listing
+    </button>
+  </form>
+
+  <hr style="border: 0; border-top: 1px solid #eae8e1; margin: 28px 0;">
+
+  <div style="background-color: #fdfdfd; border: 1px solid #eae8e1; border-radius: 8px; padding: 16px;">
+    <h4 style="margin: 0 0 10px 0; color: #2c3531; font-size: 14px; font-weight: 700;">Tips for a good listing</h4>
+    <ul style="margin: 0; padding-left: 20px; color: #6b705c; font-size: 13px; line-height: 1.6;">
+      <li>Include the quantity and condition of the item.</li>
+      <li>Set a realistic expiry time — earlier is better.</li>
+      <li>Add your location to help nearby recipients find you faster.</li>
+    </ul>
+  </div>
+
 </div>
 {% endblock %}
