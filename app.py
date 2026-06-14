@@ -113,13 +113,11 @@ def home():
 
 @app.route('/browse')
 def browse():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    category = request.args.get('category', 'all')
+    category = request.get_json().get('category', 'all') if request.is_json else request.args.get('category', 'all')
     
     listings = [
-        [1, 1, "Produce", "Fresh organic vegetables from regional surplus.", 5.0, datetime.now(), "Pick up before 6 PM", "available", "Local Hub A", "Main Street"],
-        [2, 1, "Bakery", "Assorted artisanal breads and pastries.", 3.2, datetime.now(), "Available all afternoon", "available", "Bakehouse B", "Cross Road"]
+        [1, 1, "Produce", "Fresh organic vegetables from regional sources."],
+        [2, 1, "Bakery", "Assorted artisanal breads and pastries."]
     ]
     
     return render_template('browse.html', listings=listings, category=category)
