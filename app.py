@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-import urllib.parse  # Used to safely handle special characters like '@' in database passwords
+import urllib.parse  # Safely handles special characters like '@' in database passwords
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -12,7 +12,7 @@ app.secret_key = 'your_secret_key_here'
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
-    # Modernizes older cloud connection strings automatically to prevent engine crashes
+    # Automatically modernizes older cloud connection strings to prevent engine crashes
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
@@ -103,6 +103,11 @@ def browse():
         listings = Listing.query.all()
     return render_template('browse.html', listings=listings, current_category=category)
 
+# ADDED ROUTE ALIAS: Resolves template tracking BuildErrors targeting 'dashboard'
+@app.route('/dashboard')
+def dashboard():
+    return redirect(url_for('browse'))
+
 @app.route('/post', methods=['GET', 'POST'])
 def post():
     if 'user_id' not in session:
@@ -125,12 +130,12 @@ def post():
         return redirect(url_for('browse'))
     return render_template('post.html')
 
-# Single, unique endpoint route setup - resolves the duplicate mapping AssertionError
+# Unique endpoint route setup - resolves duplicate mapping AssertionError
 @app.route('/listing/<int:listing_id>')
 def listing_detail(listing_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    # Correct variable definition resolves Pylance warnings completely
+    # Assigning to variable name 'listing' resolves Pylance tracking warnings completely
     listing = Listing.query.get_or_404(listing_id)
     return render_template('listing_detail.html', listing=listing)
 
