@@ -6,13 +6,11 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
 # -------------------------------------------------------------------------
-# DATABASE CONFIGURATION (Local MySQL vs Live Production Render)
+# DATABASE CONFIGURATION
 # -------------------------------------------------------------------------
 if os.environ.get('RENDER'):
-    # Production cloud database instance configuration hook
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 else:
-    # Local fallback connection to your custom MySQL schema
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/surplus_service'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -24,11 +22,11 @@ db = SQLAlchemy(app)
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False) # Patched column
+    username = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False) # Maps to your field
-    role = db.Column(db.String(50), nullable=False, default='farmer') # Maps to your ENUM
+    password = db.Column(db.String(255), nullable=False) 
+    role = db.Column(db.String(50), nullable=False, default='farmer')
     location = db.Column(db.String(200), nullable=True)
 
 class Listing(db.Model):
@@ -37,9 +35,9 @@ class Listing(db.Model):
     title = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    weight = db.Column(db.Float, nullable=False)
-    expires_at = db.Column(db.String(100), nullable=False)
-    pickup_info = db.Column(db.String(100), nullable=False)
+    weight = db.Column(db.Float, nullable=False)          
+    expires_at = db.Column(db.String(100), nullable=False) 
+    pickup_info = db.Column(db.String(100), nullable=False) 
     location_name = db.Column(db.String(100), nullable=True)
     address = db.Column(db.String(255), nullable=True)
 
@@ -64,7 +62,6 @@ def register():
             flash('Email already registered!', 'danger')
             return redirect(url_for('register'))
             
-        # Lowercase role maps seamlessly with your MySQL ENUM constraints
         new_user = User(username=username, name=name, email=email, password=password, role=role.lower())
         db.session.add(new_user)
         db.session.commit()
@@ -107,9 +104,9 @@ def post():
             description=request.form.get('description'),
             weight=float(request.form.get('weight') or 0.0),
             expires_at=request.form.get('expires_at'),
-            pickup_info=request.form.get('pickup_info'),
-            location_name=request.form.get('location_name'),
-            address=request.form.get('address')
+            pickup_info=request.form.get('pickup_preference'), # Form names match image definitions
+            location_name=request.form.get('location_name', ''),
+            address=request.form.get('address', '')
         )
         db.session.add(new_listing)
         db.session.commit()
@@ -117,22 +114,20 @@ def post():
         return redirect(url_for('browse'))
     return render_template('post.html')
 
-# Fixed unique item route to prevent AssertionError mapping conflicts
 @app.route('/listing/<int:listing_id>')
 def listing_detail(listing_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    listing = Listing.query.get_or_404(listing_id)
-    return render_template('listing_detail.html', listing=listing)
+    # Correct variable declarations remove Pylance highlights completely
+    listing_item = Listing.query.get_or_404(listing_id)
+    return render_template('listing_detail.html', listing=listing_item)
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
 
-# -------------------------------------------------------------------------
-# RUN UTILITY
-# -------------------------------------------------------------------------
+# Automatically build modern structures on app launch environment setup
 with app.app_context():
     db.create_all()
 
