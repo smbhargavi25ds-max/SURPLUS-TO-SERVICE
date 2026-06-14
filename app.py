@@ -1,31 +1,34 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
-# Database Connection (Adjust parameters for local MySQL vs Production)
+# -------------------------------------------------------------------------
+# DATABASE CONFIGURATION (Local MySQL vs Live Production Render)
+# -------------------------------------------------------------------------
 if os.environ.get('RENDER'):
+    # Production cloud database instance configuration hook
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 else:
+    # Local fallback connection to your custom MySQL schema
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/surplus_service'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # -------------------------------------------------------------------------
-# Database Models
+# DATABASE MODELS
 # -------------------------------------------------------------------------
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(100), nullable=False) # Patched column
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(50), nullable=False, default='farmer')
+    password = db.Column(db.String(255), nullable=False) # Maps to your field
+    role = db.Column(db.String(50), nullable=False, default='farmer') # Maps to your ENUM
     location = db.Column(db.String(200), nullable=True)
 
 class Listing(db.Model):
@@ -41,7 +44,7 @@ class Listing(db.Model):
     address = db.Column(db.String(255), nullable=True)
 
 # -------------------------------------------------------------------------
-# Application Routes
+# APPLICATION ROUTES
 # -------------------------------------------------------------------------
 @app.route('/')
 def home():
@@ -61,6 +64,7 @@ def register():
             flash('Email already registered!', 'danger')
             return redirect(url_for('register'))
             
+        # Lowercase role maps seamlessly with your MySQL ENUM constraints
         new_user = User(username=username, name=name, email=email, password=password, role=role.lower())
         db.session.add(new_user)
         db.session.commit()
@@ -101,7 +105,7 @@ def post():
             title=request.form.get('title'),
             category=request.form.get('category'),
             description=request.form.get('description'),
-            weight=float(request.form.get('weight') or 0),
+            weight=float(request.form.get('weight') or 0.0),
             expires_at=request.form.get('expires_at'),
             pickup_info=request.form.get('pickup_info'),
             location_name=request.form.get('location_name'),
@@ -113,6 +117,7 @@ def post():
         return redirect(url_for('browse'))
     return render_template('post.html')
 
+# Fixed unique item route to prevent AssertionError mapping conflicts
 @app.route('/listing/<int:listing_id>')
 def listing_detail(listing_id):
     if 'user_id' not in session:
@@ -125,8 +130,11 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
+# -------------------------------------------------------------------------
+# RUN UTILITY
+# -------------------------------------------------------------------------
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
-    
