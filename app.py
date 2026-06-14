@@ -113,7 +113,7 @@ def home():
 
 @app.route('/browse')
 def browse():
-    category = request.get_json().get('category', 'all') if request.is_json else request.args.get('category', 'all')
+    category = request.args.get('category', 'all')
     
     listings = [
         [1, 1, "Produce", "Fresh organic vegetables from regional sources."],
