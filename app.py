@@ -2,9 +2,19 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.secret_key = 'surplus_to_service_secret_key_change_in_production'
+# Load the secret key from environment variables (best practice)
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
+
+# Configure database connection via environment variable
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+# Remove: mysql = PyMySQLWrapper(app)
 
 # ─── DATABASE BYPASS CONFIGURATION ───────────────────────
 # The local MySQL configurations have been commented out to prevent execution failures on the cloud.
@@ -100,33 +110,18 @@ def browse():
         return redirect(url_for('login'))
     
     category = request.args.get('category')
-    
-    # Connect to your MySQL database
-    cur = mysql.connection.cursor()
-    
-    # Query data dynamically based on the category
+
+    # Use SQLAlchemy to execute the query safely
     if category and category != 'all':
-        cur.execute("SELECT id, title, category, weight, description, pickup_info FROM listings WHERE category = %s", (category,))
+        query = db.text("SELECT id, title, category, weight, description, pickup_info FROM listing WHERE category = :cat")
+        result = db.session.execute(query, {'cat': category})
     else:
-        cur.execute("SELECT id, title, category, weight, description, pickup_info FROM listings")
-    
-    # Fetch results as dictionaries so you can use item['title'] in HTML
-    # Note: Requires a cursor that returns dictionaries, or map them manually
-    raw_listings = cur.fetchall()
-    cur.close()
-    
-    # Convert list of tuples to list of dictionaries for easier access in Jinja2
-    listings = []
-    for row in raw_listings:
-        listings.append({
-            "id": row[0],
-            "title": row[1],
-            "category": row[2],
-            "weight": row[3],
-            "description": row[4],
-            "pickup_info": row[5]
-        })
-        
+        query = db.text("SELECT id, title, category, weight, description, pickup_info FROM listing")
+        result = db.session.execute(query)
+
+    # Fetch results directly as dictionaries using mappings
+    listings = result.mappings().all()
+
     return render_template('browse.html', listings=listings, current_category=category)
 
 @app.route('/listing/<int:listing_id>')
@@ -157,24 +152,33 @@ def confirmed(listing_id):
 
 @app.route('/post', methods=['GET', 'POST'])
 def post():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
     if request.method == 'POST':
-        # YOU MUST DEFINE THESE VARIABLES FIRST
         title = request.form.get('title')
         category = request.form.get('category')
         weight = request.form.get('weight')
         description = request.form.get('description')
         pickup_info = request.form.get('pickup_info')
         
-        cur = mysql.connection.cursor()
-        # Now these variables are defined and can be used in the query
-        cur.execute("INSERT INTO listings (title, category, weight, description, pickup_info) VALUES (%s, %s, %s, %s, %s)", 
-                    (title, category, weight, description, pickup_info))
-        mysql.connection.commit()
-        cur.close()
+        # Use SQLAlchemy to execute the insert
+        sql = db.text("""
+            INSERT INTO listings (title, category, weight, description, pickup_info) 
+            VALUES (:title, :category, :weight, :description, :pickup_info)
+        """)
+        db.session.execute(sql, {
+            'title': title, 
+            'category': category, 
+            'weight': weight, 
+            'description': description, 
+            'pickup_info': pickup_info
+        })
+        db.session.commit()
+        
         flash('Listing published!', 'success')
         return redirect(url_for('browse'))
     return render_template('post.html')
-
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
