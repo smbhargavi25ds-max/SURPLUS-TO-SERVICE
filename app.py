@@ -4,16 +4,18 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# 1. Configuration: Uses Render variables or falls back to local for development
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'dev_fallback_secret_key_123')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    'DATABASE_URL', 
-    'mysql+pymysql://root:Smbsmb@2007@localhost/surplus_service'
-)
+# This is the single source of truth for your DB
+database_url = os.environ.get('DATABASE_URL')
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-fallback-key')  # Ensure you set this in production
+
+if not database_url:
+    # Fallback to local only if absolutely necessary
+    database_url = 'mysql+pymysql://SM Bhargavi:Smbsmb@2007@localhost/surplus_service'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
 # ─── AUTHENTICATION ROUTES ───────────────────────────────
 
 @app.route('/')
@@ -47,11 +49,6 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for('login'))
-
-@app.route('/forgot-password')
-def forgot_password():
-    # Route added to resolve the 500 BuildError
-    return "Password recovery service is currently under maintenance."
 
 # ─── CORE PAGES AND DATA HANDLING ───────────────────────
 
