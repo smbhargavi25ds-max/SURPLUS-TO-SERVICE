@@ -50,6 +50,11 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+@app.route('/forgot-password')
+def forgot_password():
+    # Route added to resolve the 500 BuildError
+    return "Password recovery service is under maintance."
+
 # ─── CORE PAGES AND DATA HANDLING ───────────────────────
 
 @app.route('/home')
@@ -113,6 +118,15 @@ def dashboard():
                            saved=0.0, 
                            co2=0.0, 
                            active_listings=0)
+import os
+
+if __name__ == '__main__':
+    # Get the port from the environment variable provided by Railway
+    # Default to 5000 if no port is provided (for local testing)
+    port = int(os.environ.get("PORT", 5000))
+    
+    # Listen on all available network interfaces (0.0.0.0)
+    app.run(host='0.0.0.0', port=port)
 
 if __name__ == '__main__':
     app.run(debug=True)
