@@ -1,12 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from datetime import datetime
 import os
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'dev_secret_key_change_in_production')
 
-# Configure database: Uses Render variable if available, otherwise defaults to your local DB
+# 1. Configuration: Uses Render variables or falls back to local for development
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'dev_fallback_secret_key_123')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL', 
     'mysql+pymysql://root:Smbsmb@2007@localhost/surplus_service'
@@ -27,7 +26,7 @@ def index():
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
-        # Hardcoded verification profile to allow site testing
+        # Simple test logic for demonstration
         if email:
             session['user_id'] = 1
             session['user_name'] = "Test User"
@@ -48,6 +47,11 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+@app.route('/forgot-password')
+def forgot_password():
+    # Route added to resolve the 500 BuildError
+    return "Password recovery service is currently under maintenance."
 
 # ─── CORE PAGES AND DATA HANDLING ───────────────────────
 
