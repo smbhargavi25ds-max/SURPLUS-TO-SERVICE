@@ -96,13 +96,38 @@ def home():
 
 @app.route('/browse')
 def browse():
-    # If you aren't using a class, define 'listings' as a list of dictionaries
-    # or a list of lists so your template has data to work with.
-    listings = [
-        {"id": 1, "title": "Fresh Produce", "category": "Produce", "weight": 5.0, "description": "Organic"},
-        {"id": 2, "title": "Bakery Items", "category": "Bakery", "weight": 2.0, "description": "Fresh bread"}
-    ]
-    return render_template('browse.html', listings=listings)
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    category = request.args.get('category')
+    
+    # Connect to your MySQL database
+    cur = mysql.connection.cursor()
+    
+    # Query data dynamically based on the category
+    if category and category != 'all':
+        cur.execute("SELECT id, title, category, weight, description, pickup_info FROM listings WHERE category = %s", (category,))
+    else:
+        cur.execute("SELECT id, title, category, weight, description, pickup_info FROM listings")
+    
+    # Fetch results as dictionaries so you can use item['title'] in HTML
+    # Note: Requires a cursor that returns dictionaries, or map them manually
+    raw_listings = cur.fetchall()
+    cur.close()
+    
+    # Convert list of tuples to list of dictionaries for easier access in Jinja2
+    listings = []
+    for row in raw_listings:
+        listings.append({
+            "id": row[0],
+            "title": row[1],
+            "category": row[2],
+            "weight": row[3],
+            "description": row[4],
+            "pickup_info": row[5]
+        })
+        
+    return render_template('browse.html', listings=listings, current_category=category)
 
 @app.route('/listing/<int:listing_id>')
 def listing_detail(listing_id):
@@ -132,9 +157,20 @@ def confirmed(listing_id):
 
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
     if request.method == 'POST':
+        # YOU MUST DEFINE THESE VARIABLES FIRST
+        title = request.form.get('title')
+        category = request.form.get('category')
+        weight = request.form.get('weight')
+        description = request.form.get('description')
+        pickup_info = request.form.get('pickup_info')
+        
+        cur = mysql.connection.cursor()
+        # Now these variables are defined and can be used in the query
+        cur.execute("INSERT INTO listings (title, category, weight, description, pickup_info) VALUES (%s, %s, %s, %s, %s)", 
+                    (title, category, weight, description, pickup_info))
+        mysql.connection.commit()
+        cur.close()
         flash('Listing published!', 'success')
         return redirect(url_for('browse'))
     return render_template('post.html')
