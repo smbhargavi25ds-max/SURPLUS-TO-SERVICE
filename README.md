@@ -74,7 +74,7 @@ This creates the `surplus_service` database and all tables with sample data.
 ```python
 app.config['MYSQL_HOST']     = 'localhost'
 app.config['MYSQL_USER']     = 'root'
-app.config['MYSQL_PASSWORD'] = 'your_password'   # ← change this
+app.config['MYSQL_PASSWORD'] = 'Smbsmb@2007'   # ← change this
 app.config['MYSQL_DB']       = 'surplus_service'
 ```
 

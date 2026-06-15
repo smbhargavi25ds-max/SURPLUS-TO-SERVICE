@@ -3,92 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Surplus to Service{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: #fbf9f4;
-            color: #2c3531;
-        }
-        .navbar {
-            background-color: #ffffff;
-            border-bottom: 1px solid #eeebe3;
-            padding: 16px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar-brand {
-            font-size: 18px;
-            font-weight: 700;
-            color: #3b7a57;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
-        .navbar-links {
-            display: flex;
-            gap: 24px;
-        }
-        .nav-item {
-            color: #6b705c;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .nav-item:hover {
-            color: #3b7a57;
-        }
-        .main-container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 24px;
-            box-sizing: border-box;
-        }
-        .flash-container {
-            margin-bottom: 24px;
-        }
-        .alert {
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .alert-success { background: rgba(59, 122, 87, 0.1); color: #3b7a57; }
-        .alert-danger { background: rgba(178, 59, 59, 0.1); color: #b23b3b; }
-    </style>
+    <title>Surplus To Service</title>
 </head>
-<body>
-
-    <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="navbar-brand">
-            <i class="fa-solid fa-leaf"></i> Surplus to Service
-        </a>
-        <div class="navbar-links">
-            <a href="{{ url_for('home') }}" class="nav-item">Home</a>
-            <a href="{{ url_for('browse') }}" class="nav-item">Browse</a>
-            <a href="{{ url_for('post') }}" class="nav-item">Post Excess</a>
-            <a href="{{ url_for('dashboard') }}" class="nav-item">Dashboard</a>
-            <a href="{{ url_for('logout') }}" class="nav-item" style="color: #b23b3b;">Logout</a>
+<body style="margin: 0; background-color: #f7f5f0; font-family: system-ui, sans-serif;">
+    <nav style="background: #2c3531; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center;">
+        <a href="{{ url_for('home') }}" style="color: #fff; text-decoration: none; font-size: 20px; font-weight: bold;">Surplus To Service</a>
+        <div>
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('browse') }}" style="color: #fff; text-decoration: none; margin-right: 20px;">Browse</a>
+                <a href="{{ url_for('post') }}" style="color: #fff; text-decoration: none; margin-right: 20px;">Post Listing</a>
+                <a href="{{ url_for('logout') }}" style="color: #ff6b6b; text-decoration: none; font-weight: 600;">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" style="color: #fff; text-decoration: none; margin-right: 20px;">Login</a>
+                <a href="{{ url_for('register') }}" style="color: #fff; text-decoration: none; border: 1px solid #fff; padding: 6px 12px; border-radius: 4px;">Register</a>
+            {% endif %}
         </div>
     </nav>
 
-    <main class="main-container">
+    <div style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="flash-container">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
+                {% for category, message in messages %}
+                    <div style="padding: 12px; margin-bottom: 20px; border-radius: 6px; background-color: {% if category == 'danger' %}#f8d7da{% else %}#d1e7dd{% endif %}; color: {% if category == 'danger' %}#842029{% else %}#0f5132{% endif %};">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             {% endif %}
         {% endwith %}
-
-        {% block content %}
-        {% endblock %}
-    </main>
-
+        
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>
