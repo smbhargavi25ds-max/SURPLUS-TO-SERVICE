@@ -5,13 +5,9 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-# Load the secret key from environment variables (best practice)
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default_secret_key')
-
 # Configure database connection via environment variable
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
 # Remove: mysql = PyMySQLWrapper(app)
