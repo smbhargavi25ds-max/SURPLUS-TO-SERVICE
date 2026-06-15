@@ -100,11 +100,22 @@ def post():
         return redirect(url_for('browse'))
     return render_template('post.html')
 
+# Add these routes to your app.py to prevent BuildErrors
+@app.route('/forgot-password')
+def forgot_password():
+    return "Recovery coming soon!"
+
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    return render_template('dashboard.html', exchanges=[], total=12, saved=34.5, co2=79.4, active_listings=2)
+    # Dummy data to ensure the dashboard renders while you build the DB logic
+    return render_template('dashboard.html', 
+                           exchanges=[], 
+                           total=0, 
+                           saved=0.0, 
+                           co2=0.0, 
+                           active_listings=0)
 
 if __name__ == '__main__':
     app.run(debug=True)
