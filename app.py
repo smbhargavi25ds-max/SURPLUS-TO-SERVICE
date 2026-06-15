@@ -96,28 +96,15 @@ def home():
 
 @app.route('/browse')
 def browse():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
-    category = request.args.get('category')
-    
-    # Connect to your MySQL database
+    # 1. Fetch data from MySQL
     cur = mysql.connection.cursor()
-    
-    # Query data dynamically based on the category
-    if category and category != 'all':
-        cur.execute("SELECT id, title, category, weight, description, pickup_info FROM listings WHERE category = %s", (category,))
-    else:
-        cur.execute("SELECT id, title, category, weight, description, pickup_info FROM listings")
-    
-    # Fetch results as dictionaries so you can use item['title'] in HTML
-    # Note: Requires a cursor that returns dictionaries, or map them manually
-    raw_listings = cur.fetchall()
+    cur.execute("SELECT id, title, category, weight, description, pickup_info FROM listings")
+    rows = cur.fetchall()
     cur.close()
     
-    # Convert list of tuples to list of dictionaries for easier access in Jinja2
+    # 2. Map to a list of dictionaries so your HTML works
     listings = []
-    for row in raw_listings:
+    for row in rows:
         listings.append({
             "id": row[0],
             "title": row[1],
@@ -126,8 +113,9 @@ def browse():
             "description": row[4],
             "pickup_info": row[5]
         })
-        
-    return render_template('browse.html', listings=listings, current_category=category)
+    
+    # 3. Pass to the template
+    return render_template('browse.html', listings=listings)
 
 @app.route('/listing/<int:listing_id>')
 def listing_detail(listing_id):
